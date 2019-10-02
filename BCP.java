@@ -18,9 +18,9 @@ public class BCP {
 	// PC, Status do Processo, X e Y são inicializados de modo padrão. Prioridade é recebida após extração via arquivo, bem como o Nome do Programa.
 	//     Referência de Memória é apenas um endereço de memória do próprio Java, tendo sua declaração na construção do BCP
 	
-	public BCP(int prioridade, String nomePrograma) {
+	public BCP(int prioridade, String[] buffer, String nomePrograma) {
 		this.prioridade = prioridade;
-		this.referenciaMemoria = new String[0];
+		this.referenciaMemoria = buffer;
 		this.nomePrograma = nomePrograma;
 	}
 	
@@ -74,5 +74,21 @@ public class BCP {
 	
 	public void setY(int Y) {
 		this.Y = Y;
+	}
+	
+	public int compareTo(BCP bcp) throws NullPointerException, ClassCastException{
+		if (this.prioridade < bcp.prioridade)
+			return -1;
+		if (this.prioridade > bcp.prioridade)
+			return 1;
+		char[] comp1 = this.nomePrograma.toCharArray();
+		char[] comp2 = bcp.nomePrograma.toCharArray();
+		if (comp1[0] < comp2[0])
+			return -1;
+		if (comp1[0] > comp2[0])
+			return 1;
+		if (comp1[1] < comp2[1])
+			return -1;
+		return 1;
 	}
 }

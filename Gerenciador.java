@@ -111,7 +111,7 @@ public class Gerenciador {
 		}
 
 		// Declaração dos buffers dos códigos de cada programa
-		String codProg[] = new String[9];
+		String codProg[][] = new String[9][2];
 
 		// Declaração das variáveis que contabilizam a quantidade de linhas de cada
 		// programa
@@ -135,16 +135,6 @@ public class Gerenciador {
 			for(int i = 0; i<10; i++) {
 				codProg[i] = constroiBufferPrograma(arqProg[i], qtdLinhas[i]); //AQUI TA MEIO ZOADO
 			}
-			codProg1 = constroiBufferPrograma(arqProg1, qtdLinhas1);
-			codProg2 = constroiBufferPrograma(arqProg2, qtdLinhas2);
-			codProg3 = constroiBufferPrograma(arqProg3, qtdLinhas3);
-			codProg4 = constroiBufferPrograma(arqProg4, qtdLinhas4);
-			codProg5 = constroiBufferPrograma(arqProg5, qtdLinhas5);
-			codProg6 = constroiBufferPrograma(arqProg6, qtdLinhas6);
-			codProg7 = constroiBufferPrograma(arqProg7, qtdLinhas7);
-			codProg8 = constroiBufferPrograma(arqProg8, qtdLinhas8);
-			codProg9 = constroiBufferPrograma(arqProg9, qtdLinhas9);
-			codProg10 = constroiBufferPrograma(arqProg10, qtdLinhas10);
 
 			// Caso algum deles retorne null, não será adicionado às estruturas - adiante
 		} else

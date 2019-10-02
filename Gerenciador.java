@@ -100,74 +100,41 @@ public class Gerenciador {
 		// Declaração instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[9];
 
-		BufferedReader arqProg1 = new BufferedReader(new FileReader("01.txt")); // Atentar-se aos diretórios
-		BufferedReader arqProg2 = new BufferedReader(new FileReader("02.txt"));
-		BufferedReader arqProg3 = new BufferedReader(new FileReader("03.txt"));
-		BufferedReader arqProg4 = new BufferedReader(new FileReader("04.txt"));
-		BufferedReader arqProg5 = new BufferedReader(new FileReader("05.txt"));
-		BufferedReader arqProg6 = new BufferedReader(new FileReader("06.txt"));
-		BufferedReader arqProg7 = new BufferedReader(new FileReader("07.txt"));
-		BufferedReader arqProg8 = new BufferedReader(new FileReader("08.txt"));
-		BufferedReader arqProg9 = new BufferedReader(new FileReader("09.txt"));
-		BufferedReader arqProg10 = new BufferedReader(new FileReader("10.txt"));
+		arqProg = geraArqProg((arqProg));
+		
 		BufferedReader arqPrioridade = new BufferedReader(new FileReader("prioridades.txt"));
 		BufferedReader arqQuantum = new BufferedReader(new FileReader("quantum.txt"));
 
 		// Marcação da quantidade máxima de caracteres permitida até o Reset
-		arqProg1.mark(1000);
-		arqProg2.mark(1000);
-		arqProg3.mark(1000);
-		arqProg4.mark(1000);
-		arqProg5.mark(1000);
-		arqProg6.mark(1000);
-		arqProg7.mark(1000);
-		arqProg8.mark(1000);
-		arqProg9.mark(1000);
-		arqProg10.mark(1000);
+		for(int i = 0; i<10; i++){
+			arqProg[i].mark(1000);
+		}
 
 		// Declaração dos buffers dos códigos de cada programa
-		String[] codProg1 = null;
-		String[] codProg2 = null;
-		String[] codProg3 = null;
-		String[] codProg4 = null;
-		String[] codProg5 = null;
-		String[] codProg6 = null;
-		String[] codProg7 = null;
-		String[] codProg8 = null;
-		String[] codProg9 = null;
-		String[] codProg10 = null;
+		String codProg[] = new String[9];
 
 		// Declaração das variáveis que contabilizam a quantidade de linhas de cada
 		// programa
-		int qtdLinhas1 = contaLinhasPrograma(arqProg1);
-		int qtdLinhas2 = contaLinhasPrograma(arqProg2);
-		int qtdLinhas3 = contaLinhasPrograma(arqProg3);
-		int qtdLinhas4 = contaLinhasPrograma(arqProg4);
-		int qtdLinhas5 = contaLinhasPrograma(arqProg5);
-		int qtdLinhas6 = contaLinhasPrograma(arqProg6);
-		int qtdLinhas7 = contaLinhasPrograma(arqProg7);
-		int qtdLinhas8 = contaLinhasPrograma(arqProg8);
-		int qtdLinhas9 = contaLinhasPrograma(arqProg9);
-		int qtdLinhas10 = contaLinhasPrograma(arqProg10);
+
+		int qtdLinhas[] = new int[9];
+		for(int i = 0; i<10; i++) {
+			qtdLinhas[i] = contaLinhasPrograma(arqProg[i]);
+		}
 
 		// Testa se o retorno da contagem foi válida, em caso positivo encaminha para a
 		// construção dos buffers dos programas
-		if (qtdLinhas1 >= 0 && qtdLinhas2 >= 0 && qtdLinhas3 >= 0 && qtdLinhas4 >= 0 && qtdLinhas5 >= 0
-				&& qtdLinhas6 >= 0 && qtdLinhas7 >= 0 && qtdLinhas8 >= 0 && qtdLinhas9 >= 0 && qtdLinhas10 >= 0) {
+		if (qtdLinhas[0] >= 0 && qtdLinhas[1] >= 0 && qtdLinhas[2] >= 0 && qtdLinhas[3] >= 0 && qtdLinhas[4] >= 0
+				&& qtdLinhas[5] >= 0 && qtdLinhas[6] >= 0 && qtdLinhas[7] >= 0 && qtdLinhas[8] >= 0 && qtdLinhas[9] >= 0) {
 
 			// Reposiciona cada ponteiro para a marcação inicial de cada Stream
-			arqProg1.reset();
-			arqProg2.reset();
-			arqProg3.reset();
-			arqProg4.reset();
-			arqProg5.reset();
-			arqProg6.reset();
-			arqProg7.reset();
-			arqProg8.reset();
-			arqProg9.reset();
-			arqProg10.reset();
+			for(int i = 0; i<10; i++) {
+				arqProg[i].reset();
+			}
 
 			// Chamada ao construtor do buffer
+			for(int i = 0; i<10; i++) {
+				codProg[i] = constroiBufferPrograma(arqProg[i], qtdLinhas[i]); //AQUI TA MEIO ZOADO
+			}
 			codProg1 = constroiBufferPrograma(arqProg1, qtdLinhas1);
 			codProg2 = constroiBufferPrograma(arqProg2, qtdLinhas2);
 			codProg3 = constroiBufferPrograma(arqProg3, qtdLinhas3);

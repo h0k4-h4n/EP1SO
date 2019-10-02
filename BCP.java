@@ -76,6 +76,8 @@ public class BCP {
 		this.Y = Y;
 	}
 	
+	// Estabelece os critérios de comparação segundo a precedência estabelecida (primeiramente verifica os créditos), depois,
+	// somente em caso de créditos iguais, desempata por ordem alfabética
 	public int compareTo(BCP bcp) throws NullPointerException, ClassCastException{
 		if (this.prioridade < bcp.prioridade)
 			return -1;

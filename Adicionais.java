@@ -23,13 +23,13 @@ public class Adicionais {
 	
 	// Constrói um buffer com o código do programa, para que haja o controle realizado pelo PC 
 	
-	public String[] bufferizaPrograma(BufferedReader arquivoPrograma) {
-		String[] buffer = new String[22];
+	public String[] bufferizaPrograma(BufferedReader arquivoPrograma, int contador) {
+		String[] buffer = new String[contador];
 		
 		try {
 			String linha = arquivoPrograma.readLine();
 		
-			for (int i = 0; i < 22 && linha != null; i++) {
+			for (int i = 0; linha != null; i++){
 				buffer[i] = linha;
 				linha = arquivoPrograma.readLine();
 			}
@@ -44,6 +44,30 @@ public class Adicionais {
 		}
 		
 		return buffer;
+	}
+	
+	// Realiza a contagem de linhas do arquivo programa
+	
+	public int contaPrograma(BufferedReader arquivoPrograma) {
+		int contador = 0;
+		
+		try {
+			String linha = arquivoPrograma.readLine();
+		
+			while(linha != null){
+				contador++;
+				linha = arquivoPrograma.readLine();
+			}
+		}
+		catch(FileNotFoundException e) {
+			System.out.println("Arquivo: " + arquivoPrograma.toString() + " não encontrado");
+			return -1;
+		}
+		catch(IOException e) {
+			System.out.println("Erro " + e.toString() + " na leitura do arquivo: " + arquivoPrograma.toString());
+			return -1;
+		}
+		return contador;
 	}
 	
 	// Interpreta uma linha de código recebida e - no lugar dos printlns - aplicará ou invocará classes/métodos que executem as devidas funções
@@ -65,6 +89,27 @@ public class Adicionais {
 		
 		else
 			System.out.println("Atualizar o registrador Y para: " + (char)linhaFatorada[2]);
+	}
+	
+	
+	//MAIN DE EXEMPLO, EXTRAÍDO DA CLASSE TESTE COM EXEMPLO DE USABILIDADE DO BUFFER
+	public static void main(String[] args) throws FileNotFoundException, IOException, IllegalArgumentException{
+		BufferedReader in = new BufferedReader(new FileReader("01.txt"));
+		in.mark(1000);
+		
+		String[] codigo;
+		int qtdLinhas = contaPrograma(in);
+		
+		if (qtdLinhas > 0){
+			in.reset();
+			codigo = bufferizaPrograma(in, qtdLinhas);
+			for (String linha : codigo)
+				System.out.println(linha);
+		}
+		
+		System.out.println("Quantidade: " + qtdLinhas);
+		
+		in.close();
 	}
 	
 	// Getter e Setters dos atributos

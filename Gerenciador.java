@@ -1,4 +1,6 @@
 import java.util.LinkedList;
+import java.io.*;
+import java.util.*;
 
 /* Classe que impõe o comportamento de gerenciamento dos processos */
 
@@ -10,19 +12,19 @@ public class Gerenciador{
 						// arquivo quantum.txt
 
 	// Tabela de Processos (Lista de BCPs, contendo todos os processos carregados - sem ordenação específica)
-	private LinkedList<BCP> tabelaProcessos;
+	private static LinkedList<BCP> tabelaProcessos;
 	
 	// Lista dos processos prontos (Lista de BCPs - ordenação primária por créditos e secundária por ordem alfabética)
-	private LinkedList<BCP> listaProntos;
+	private static LinkedList<BCP> listaProntos;
 	
 	// Lista dos processos bloqueados (Lista de BCPs) - ordenada por ordem de chegada
-	private LinkedList<BCP> listaBloqueados;
+	private static LinkedList<BCP> listaBloqueados;
 	
 /* -------------- MÉTODOS -------------- */
 
 	// Constrói um buffer com o código do programa, para que haja o controle realizado pelo PC 
 	
-	public String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
+	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
 		
 		try {
@@ -47,7 +49,7 @@ public class Gerenciador{
 	
 	// Realiza a contagem de linhas do arquivo programa
 	
-	public int contaLinhasPrograma(BufferedReader arquivoPrograma) {
+	public static int contaLinhasPrograma(BufferedReader arquivoPrograma) {
 		int contador = 0;
 		
 		try {

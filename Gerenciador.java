@@ -79,9 +79,9 @@ public class Gerenciador {
 			for (int i = 0; i < 10; i++) {
 				auxNomeTxt++;
 				if (Integer.toString(i).length() == 1) {
-					aux = "0" + Integer.toString(auxNomeTxt)+".txt";
+					aux = "0" + Integer.toString(auxNomeTxt) + ".txt";
 				} else {
-					aux = Integer.toString(auxNomeTxt)+".txt";
+					aux = Integer.toString(auxNomeTxt) + ".txt";
 				}
 				entrada[i] = new BufferedReader(new FileReader(aux));
 			}
@@ -101,40 +101,58 @@ public class Gerenciador {
 		BufferedReader[] arqProg = new BufferedReader[9];
 
 		arqProg = geraArqProg((arqProg));
-		
+
 		BufferedReader arqPrioridade = new BufferedReader(new FileReader("prioridades.txt"));
 		BufferedReader arqQuantum = new BufferedReader(new FileReader("quantum.txt"));
 
 		// Marcação da quantidade máxima de caracteres permitida até o Reset
-		for(int i = 0; i<10; i++){
+		for (int i = 0; i < 10; i++) {
 			arqProg[i].mark(1000);
 		}
 
 		// Declaração dos buffers dos códigos de cada programa
-		String codProg[][] = new String[9][2];
+		// Declaração dos buffers dos códigos de cada programa
+		String[] codProg1;
+		String[] codProg2;
+		String[] codProg3;
+		String[] codProg4;
+		String[] codProg5;
+		String[] codProg6;
+		String[] codProg7;
+		String[] codProg8;
+		String[] codProg9;
+		String[] codProg10;
 
 		// Declaração das variáveis que contabilizam a quantidade de linhas de cada
 		// programa
 
 		int qtdLinhas[] = new int[9];
-		for(int i = 0; i<10; i++) {
+		for (int i = 0; i < 10; i++) {
 			qtdLinhas[i] = contaLinhasPrograma(arqProg[i]);
 		}
 
 		// Testa se o retorno da contagem foi válida, em caso positivo encaminha para a
 		// construção dos buffers dos programas
 		if (qtdLinhas[0] >= 0 && qtdLinhas[1] >= 0 && qtdLinhas[2] >= 0 && qtdLinhas[3] >= 0 && qtdLinhas[4] >= 0
-				&& qtdLinhas[5] >= 0 && qtdLinhas[6] >= 0 && qtdLinhas[7] >= 0 && qtdLinhas[8] >= 0 && qtdLinhas[9] >= 0) {
+				&& qtdLinhas[5] >= 0 && qtdLinhas[6] >= 0 && qtdLinhas[7] >= 0 && qtdLinhas[8] >= 0
+				&& qtdLinhas[9] >= 0) {
 
 			// Reposiciona cada ponteiro para a marcação inicial de cada Stream
-			for(int i = 0; i<10; i++) {
+			for (int i = 0; i < 10; i++) {
 				arqProg[i].reset();
 			}
 
 			// Chamada ao construtor do buffer
-			for(int i = 0; i<10; i++) {
-				codProg[i] = constroiBufferPrograma(arqProg[i], qtdLinhas[i]); //AQUI TA MEIO ZOADO
-			}
+			codProg1 = constroiBufferPrograma(arqProg[0], qtdLinhas[0]);
+			codProg2 = constroiBufferPrograma(arqProg[1], qtdLinhas[1]);
+			codProg3 = constroiBufferPrograma(arqProg[2], qtdLinhas[2]);
+			codProg4 = constroiBufferPrograma(arqProg[3], qtdLinhas[3]);
+			codProg5 = constroiBufferPrograma(arqProg[4], qtdLinhas[4]);
+			codProg6 = constroiBufferPrograma(arqProg[5], qtdLinhas[5]);
+			codProg7 = constroiBufferPrograma(arqProg[6], qtdLinhas[6]);
+			codProg8 = constroiBufferPrograma(arqProg[7], qtdLinhas[7]);
+			codProg9 = constroiBufferPrograma(arqProg[8], qtdLinhas[8]);
+			codProg10 = constroiBufferPrograma(arqProg[9], qtdLinhas[9]);
 
 			// Caso algum deles retorne null, não será adicionado às estruturas - adiante
 		} else

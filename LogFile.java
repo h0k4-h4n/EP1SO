@@ -5,16 +5,17 @@ import java.io.*;
 public class LogFile{
 	
 /* -------- ATRIBUTOS -------- */
-
-	private BufferedWriter arqLogFile;	// Ponteiro para o arquivo de saída 
-	private String[] bufferResposta;	// Buffer de Resposta
-	private int iterador;				// Controlador global do índice do buffer de resposta
+	
+	private static LogFile logFile = null;		// Instância dessa classe, inicializada com null
+	private BufferedWriter arqLogFile;			// Ponteiro para o arquivo de saída 
+	private String[] bufferResposta;			// Buffer de Resposta
+	private int iterador;						// Controlador global do índice do buffer de resposta
 
 /* -------- CONSTRUTORES -------- */
 	
 	// Recebe como parâmetro o quantum (N_COM) para que esse seja parte do nome do arquivo gerado. Constrói a stream do
 	// arquivo de saída (LogFile), declara um buffer de resposta com 1000 linhas e inicia o iterador global
-	public LogFile(int N_COM) throws IOException{
+	private LogFile(int N_COM) throws IOException{
 		String nomeDoArquivo = "log";
 		
 		if (N_COM < 10)
@@ -75,7 +76,7 @@ public class LogFile{
 			msgInterrompeProcesso(nomeProcesso, qtdInstrucoes);
 			
 			this.iterador--;
-			this.bufferResposta[this.iterador] = this.bufferResposta[this.iterador] + " (havia antes comando de E/S";
+			this.bufferResposta[this.iterador] = this.bufferResposta[this.iterador] + " (havia antes comando de E/S)";
 			this.iterador++;
 		}
 		else
@@ -128,5 +129,12 @@ public class LogFile{
 		}
 		else
 			System.err.println("Erro na gravação do LogFile");
+	}
+	
+	// Método público para retornar a instância única do objeto de LogFile. Recebe como parâmetro o quantum utilizado (N_COM)
+	public static LogFile getInstance(int N_COM) throws IOException{
+		if (this.logFile == null)
+			this.logFile = new LogFile(N_COM);
+		return this.logFile;	
 	}
 }

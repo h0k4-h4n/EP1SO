@@ -74,10 +74,6 @@ public class LogFile{
 			this.iterador++;
 			
 			msgInterrompeProcesso(nomeProcesso, qtdInstrucoes);
-			
-			this.iterador--;
-			this.bufferResposta[this.iterador] = this.bufferResposta[this.iterador] + " (havia antes comando de E/S)";
-			this.iterador++;
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");

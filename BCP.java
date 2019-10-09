@@ -5,19 +5,20 @@ public class BCP {
 	
 /* ------------ ATRIBUTOS ------------- */
 	
-	private int PC = 1;					// Representa a instruo (linha) que est sendo executada - default = 1, pois a primeira linha do processo  o 
-										//                                                                                             nome do programa
+	private int PC = 1;					// Representa a instrução (linha) que está sendo executada - default = 1, pois a primeira linha do processo é o 
+										//                                                                                         nome do programa
 	private char statusProcesso = 'P';	// Recebe 'E', 'P' ou 'B' - Executando, Pronto ou Bloqueado, respectivamente
 	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alteraes ao longo das execues
 	private int X = 0;					// 1 registrador de uso geral - inicializado com zero (0)
 	private int Y = 0;					// 2 registrador de uso geral - inicializado com zero (0)
 	private String[] referenciaMemoria;	// Referncia para a regio de memria em que est o cdigo do programa executado
 	private String nomePrograma;		// Nome do programa a que cada instncia de BCP estar atrelada
+	private int creditos = 0;			// Quantidade de creditos que o processo dispoe para que seja corretamente ordenado na lista de prontos
 	
 /* ---------------- CONSTRUTORES ----------------- */
 	
 	// PC, Status do Processo, X e Y so inicializados de modo padro. Prioridade  recebida aps extrao via arquivo, bem como o Nome do Programa.
-	//     Referncia de Memria  apenas um endereo de memria do prprio Java, tendo sua declarao na construo do BCP
+	//     Referência de Memória  apenas um endereço de memória do próprio Java, tendo sua declarao na construo do BCP
 	
 	public BCP(int prioridade, String[] buffer, String nomePrograma) {
 		this.prioridade = prioridade;
@@ -57,6 +58,10 @@ public class BCP {
 		return this.nomePrograma;
 	}
 	
+	public int getCreditos(){
+		return this.creditos;
+	}
+	
 	public void setPC(int PC) {
 		this.PC = PC;
 	}
@@ -77,12 +82,16 @@ public class BCP {
 		this.Y = Y;
 	}
 	
+	public void setCreditos(int creditos){
+		this.creditos = creditos;
+	}
+	
 	// Estabelece os critrios de comparao segundo a precedncia estabelecida (primeiramente verifica os crditos), depois,
 	// somente em caso de crditos iguais, desempata por ordem alfabtica
 	public int compareTo(BCP bcp) throws NullPointerException, ClassCastException{
-		if (this.prioridade < bcp.prioridade)
+		if (this.creditos < bcp.creditos)
 			return -1;
-		if (this.prioridade > bcp.prioridade)
+		if (this.creditos > bcp.creditos)
 			return 1;
 		char[] comp1 = this.nomePrograma.toCharArray();
 		char[] comp2 = bcp.nomePrograma.toCharArray();

@@ -96,7 +96,7 @@ public class Gerenciador {
 	/* --------------- MAIN --------------- */
 	// Passível de se tornar um método void - Rotina de Inicialização
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws Exception {
 		// Declaração instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[9];
 
@@ -183,6 +183,7 @@ public class Gerenciador {
 		// pronto) - como consequência, a Lista
 		// de Bloqueados é inicializada somente com o nó cabeça (sem processos
 		// adicionados)
+		
 		if (codProg1 != null) {
 			tabelaProcessos.add(bcp1);
 			listaProntos.add(bcp1);
@@ -225,15 +226,8 @@ public class Gerenciador {
 		}
 
 		// Fechamento das Streams dos arquivos
-		arqProg1.close();
-		arqProg2.close();
-		arqProg3.close();
-		arqProg4.close();
-		arqProg5.close();
-		arqProg6.close();
-		arqProg7.close();
-		arqProg8.close();
-		arqProg9.close();
-		arqProg10.close();
+		for (int i = 0; i < 10; i++) {
+			arqProg[i].close();
+		}
 	}
 }

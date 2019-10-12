@@ -3,26 +3,29 @@ import java.util.*;
 
 // Classe que simula o comportamento do escalonador
 public class Escalonador {
-	
-/* ------------- ATRIBUTOS ------------- */
 
-	private int N_COM; 								// Número de Comandos que cada processo tem direito de executar nas 
-													//  condições iniciais, obtido pelo arquivo quantum.txt
-	private static LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos 
-													//  carregados - sem ordenação específica)	
-	private static Collection<BCP> listaProntos;    // Lista dos processos prontos (Lista de BCPs - ordenação primária por 
-													//  créditos e secundária por ordem alfabética)	
-	private static LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por ordem 
-													//  de chegada
-	private LogFile logFile;						// Instância de LogFile 
-	
-/* ------------ CONSTRUTORES -------------- */
-	
-	public Escalonador() {}	
-	
-/* ---------- MÉTODOS -------------- */
+	/* ------------- ATRIBUTOS ------------- */
 
-	// Constrói um buffer com o código do programa, para que haja o controle realizado pelo PC
+	private int N_COM; // Número de Comandos que cada processo tem direito de executar nas
+						// condições iniciais, obtido pelo arquivo quantum.txt
+	private static LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
+													// carregados - sem ordenação específica)
+	private static Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenação primária por
+													// créditos e secundária por ordem alfabética)
+	private static LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
+													// ordem
+													// de chegada
+	private LogFile logFile; // Instância de LogFile
+
+	/* ------------ CONSTRUTORES -------------- */
+
+	public Escalonador() {
+	}
+
+	/* ---------- MÉTODOS -------------- */
+
+	// Constrói um buffer com o código do programa, para que haja o controle
+	// realizado pelo PC
 	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
 
@@ -84,9 +87,10 @@ public class Escalonador {
 		}
 
 	}
-	
-	// Rotina de inicialização do escalonador - leitura dos arquivos e carregamento dos processos 
-	public static void carregaProcessos(){
+
+	// Rotina de inicialização do escalonador - leitura dos arquivos e carregamento
+	// dos processos
+	public static void carregaProcessos() {
 		// Declaração das instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[10];
 
@@ -173,7 +177,7 @@ public class Escalonador {
 		// pronto) - como consequência, a Lista
 		// de Bloqueados é inicializada somente com o nó cabeça (sem processos
 		// adicionados)
-		
+
 		if (codProg1 != null) {
 			tabelaProcessos.add(bcp1);
 			listaProntos.add(bcp1);
@@ -214,7 +218,7 @@ public class Escalonador {
 			tabelaProcessos.add(bcp10);
 			listaProntos.add(bcp10);
 		}
-		
+
 		// Leitura do arquivo quantum.txt e declaração do LogFile
 		N_COM = arqQuantum.readLine();
 		logFile = LogFile.getInstance(N_COM);
@@ -225,21 +229,22 @@ public class Escalonador {
 		}
 		arqPrioridade.close();
 		arqQuantum.close();
-		
-		// Confecção do log de carregamento dos processos - cria um iterador, um buffer com os nomes dos processos e 
+
+		// Confecção do log de carregamento dos processos - cria um iterador, um buffer
+		// com os nomes dos processos e
 		// chama o método do logFile
 		Iterator<BCP> it = listaProntos.descendingIterator();
 		String[] nomesProcessos = new String[10];
-		
-		for (String nomeProcesso : nomesProcessos){
+
+		for (String nomeProcesso : nomesProcessos) {
 			nomeProcesso = it.next().getNomePrograma();
 		}
-		
+
 		logFile.msgCarregaProcessos(nomesProcessos);
 	}
-	
-	// Interpreta uma linha de código recebida e executa as instruções nela contidas 
-	public static void interpretaCodigo(BCP bcp, int qtdInstrucoes){
+
+	// Interpreta uma linha de código recebida e executa as instruções nela contidas
+	public static boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
 		if (linhaFatorada[0] == 'E'){
@@ -276,36 +281,54 @@ public class Escalonador {
 			
 			if (tabelaProcessos.remove(bcp) == false || listaProntos.remove(bcp) == false)
 				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
+			else 
+				return true;
+
 		}
+
+		return false;
 	}
-	
-/* --------------- MAIN --------------- */
-	
+
+	/* --------------- MAIN --------------- */
+
 	public static void main(String[] args) {
-		// Declara um BCP genérico para realizar as chamadas, um contador de instruções para determinar quantas instruções
+		// Declara um BCP genérico para realizar as chamadas, um contador de instruções
+		// para determinar quantas instruções
 		// cada processo realizou e chama a rotina de carregamento dos processos
 		carregaProcessos();
 		BCP bcp;
-		int contaInstrucoes;		
-		
-		// O escalonador executará os processos até que todos tenham terminado. Para tal o contador de instruções 
-		// inicia cada quantum com zero, obtém-se o BCP do processo de maior prioridade (dada a implementação via TreeSet, 
-		// esse processo estará por último) e o status do mesmo é alterado para E - Executando
-		while (tabelaProcessos.size() > 0){
+		int contaInstrucoes;
+
+		// O escalonador executará os processos até que todos tenham terminado. Para tal
+		// o contador de instruções
+		// inicia cada quantum com zero, obtém-se o BCP do processo de maior prioridade
+		// (dada a implementação via TreeSet,
+		// esse processo estará por último) e o status do mesmo é alterado para E -
+		// Executando
+		while (tabelaProcessos.size() > 0) {
 			contaInstrucoes = 0;
+			boolean finalizado = false;
 			bcp = listaProntos.last();
 			bcp.setStatusProcesso('E');
 			logFile.msgExecutaProcesso(bcp.getNomePrograma());
-			
-			// Executa instruções enquanto estiver com status E - Executando ou enquanto a contagem de instruções não superar
-			// o número de comandos por quantum multiplicado pela quantidade de quantum que o processo detém
-			while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E')){
+
+			// Executa instruções enquanto estiver com status E - Executando ou enquanto a
+			// contagem de instruções não superar
+			// o número de comandos por quantum multiplicado pela quantidade de quantum que
+			// o processo detém
+			while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E') && finalizado == false) {
 				contaInstrucoes++;
-				interpretaCodigo(bcp, contaInstrucoes);
+				finalizou = interpretaCodigo(bcp, contaInstrucoes);
 				bcp.setPC(bcp.getPC() + 1);
 			}
-			
-			logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);	
+
+			logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);
+			// TODO:
+			bcp.setQuantum(bcp.getQuantum()++);
+			bcp.setCreditos(bcp.getCreditos() - 2);
+			if (bcp.getCreditos() < 0) {
+				bcp.setCreditos(0);
+			}
 		}
 	}
 

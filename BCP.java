@@ -70,7 +70,7 @@ public class BCP implements Comparable<BCP> {
 		return this.quantum;
 	}
 
-	public int getTemporizador(int temp) {
+	public int getTemporizador() {
 		return this.temporizador;
 	}
 	

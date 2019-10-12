@@ -248,7 +248,14 @@ public class Escalonador {
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
 		if (linhaFatorada[0] == 'E'){
-			logFile.msgESProcesso(bcp.getNomePrograma(), qtdInstrucoes);
+			logFile.msgESProcesso(bcp.getNomePrograma());
+			bcp.setStatusProcesso('B');
+			if(listaProntos.remove(bcp)==false){
+				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
+			}
+			listaBloqueados.add(bcp);
+			bcp.setTemporizador(2);
+		}
 		
 		else if (linhaFatorada[0] == 'X'){
 			if (linhaFatorada.length > 3){
@@ -262,6 +269,7 @@ public class Escalonador {
 			else
 				bcp.setX((int)linhaFatorada[2]);
 		}
+	
 		
 		else if (linhaFatorada[0] == 'Y'){
 			if (linhaFatorada.length > 3){
@@ -287,6 +295,16 @@ public class Escalonador {
 		}
 
 		return false;
+	}
+
+	public static void deceremantaTempBloqueados() {
+		Iterator<BCP> iterador = listaBloqueados.iterator();
+		BCP aux;
+
+		while(iterador.hasNext()) {
+			aux = iterador.next();
+			aux.setTemporizador(aux.getTemporizador()-1);
+		}
 	}
 
 	/* --------------- MAIN --------------- */
@@ -316,19 +334,25 @@ public class Escalonador {
 			// contagem de instruções não superar
 			// o número de comandos por quantum multiplicado pela quantidade de quantum que
 			// o processo detém
-			while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E') && finalizado == false) {
+			while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E')
+					&& finalizado == false) {
 				contaInstrucoes++;
-				finalizou = interpretaCodigo(bcp, contaInstrucoes);
+				finalizado = interpretaCodigo(bcp, contaInstrucoes);
 				bcp.setPC(bcp.getPC() + 1);
 			}
 
-			logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);
-			// TODO:
-			bcp.setQuantum(bcp.getQuantum()++);
-			bcp.setCreditos(bcp.getCreditos() - 2);
-			if (bcp.getCreditos() < 0) {
-				bcp.setCreditos(0);
+			if (finalizado == false) {
+				logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);
+				bcp.setQuantum(bcp.getQuantum()++);
+				bcp.setCreditos(bcp.getCreditos() - 2);
+				if (bcp.getCreditos() < 0) {
+					bcp.setCreditos(0);
+				}
+				if(listaBloqueados.size()>0) {
+					deceremantaTempBloqueados();
+				}
 			}
+
 		}
 	}
 

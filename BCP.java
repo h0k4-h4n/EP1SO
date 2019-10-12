@@ -5,21 +5,22 @@ public class BCP implements Comparable<BCP> {
 	
 /* ------------ ATRIBUTOS ------------- */
 	
-	private int PC = 1;					// Representa a instru��o (linha) que est� sendo executada - default = 1, pois a primeira linha do processo � o 
+	private int PC = 1;					// Representa a instrução (linha) que está sendo executada - default = 1, pois a primeira linha do processo é o 
 										//                                                                                         nome do programa
 	private char statusProcesso = 'P';	// Recebe 'E', 'P' ou 'B' - Executando, Pronto ou Bloqueado, respectivamente
-	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alteraes ao longo das execues
-	private int X = 0;					// 1 registrador de uso geral - inicializado com zero (0)
-	private int Y = 0;					// 2 registrador de uso geral - inicializado com zero (0)
-	private String[] referenciaMemoria;	// Referncia para a regio de memria em que est o cdigo do programa executado
+	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alteraes ao longo das execuções
+	private int X = 0;					// 1º registrador de uso geral - inicializado com zero (0)
+	private int Y = 0;					// 2º registrador de uso geral - inicializado com zero (0)
+	private String[] referenciaMemoria;	// Referência para a regio de memria em que está o código do programa executado
 	private String nomePrograma;		// Nome do programa a que cada instncia de BCP estar atrelada
-	private int creditos;				// Quantidade de creditos que o processo dispoe para que seja corretamente ordenado na lista de prontos
+	private int creditos;				// Quantidade de créditos que o processo dispõe para que seja corretamente ordenado na lista de prontos
+	private int temporizador;			// Conta o tempo de execução para suspensão de programas
 	
 /* ---------------- CONSTRUTORES ----------------- */
 	
-	// PC, Status do Processo, X e Y so inicializados de modo padro. Prioridade  recebida aps extrao via arquivo, bem como o Nome do Programa.
-	//  Refer�ncia de Mem�ria  sendo o ponteiro para o buffer com o c�digo do programa
-	//	Cr�ditos � inicializado com o mesmo valor de prioridade recebido
+	// PC, Status do Processo, X e Y so inicializados de modo padrão. Prioridade é recebida após extração via arquivo, bem como o Nome do Programa.
+	//  Referência de Memória  sendo o ponteiro para o buffer com o código do programa
+	//	Créditos é inicializado com o mesmo valor de prioridade recebido
 	
 	public BCP(int prioridade, String[] buffer, String nomePrograma) {
 		this.prioridade = prioridade;
@@ -30,7 +31,7 @@ public class BCP implements Comparable<BCP> {
 	
 /* --------------- MTODOS ------------------- */
 	
-	// Getters de todos os atributos e Setteres somente d PC, X, Y, Status do Processo e Prioridade 
+	// Getters de todos os atributos e Setteres somente de PC, X, Y, Status do Processo e Prioridade 
 	
 	public int getPC() {
 		return this.PC;
@@ -84,8 +85,8 @@ public class BCP implements Comparable<BCP> {
 		this.creditos = creditos;
 	}
 	
-	// Estabelece os critrios de comparao segundo a precedncia estabelecida (primeiramente verifica os crditos), depois,
-	// somente em caso de crditos iguais, desempata por ordem alfabtica
+	// Estabelece os critérios de comparação segundo a precedência estabelecida (primeiramente verifica os créditos), depois,
+	// somente em caso de créditos iguais, desempata por ordem alfabética
 	public int compareTo(BCP bcp) throws NullPointerException, ClassCastException{
 		if (this.creditos < bcp.getCreditos())
 			return -1;

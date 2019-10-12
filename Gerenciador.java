@@ -18,7 +18,7 @@ public class Gerenciador {
 
 	// Lista dos processos prontos (Lista de BCPs - ordenação primária por créditos
 	// e secundária por ordem alfabética)
-	private static LinkedList<BCP> listaProntos;
+	private static Collection<BCP> listaProntos = new TreeSet<BCP>();
 
 	// Lista dos processos bloqueados (Lista de BCPs) - ordenada por ordem de
 	// chegada

@@ -13,7 +13,7 @@ public class Escalonador {
 		
 	}
 	
-/* ---------- MÉTODOS -------------- */
+/* ---------- MÃ‰TODOS -------------- */
 	
 	public static void main(String[] args) {
 		Collection<BCP> listaProntos = new TreeSet<BCP>();

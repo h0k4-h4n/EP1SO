@@ -1,13 +1,13 @@
 import java.io.*;
 import java.util.LinkedList;
 
-// Classe que contém lógicas adicionais, para serem remanejadas em suas respectivas classes futuramente
+// Classe que contÃ©m lÃ³gicas adicionais, para serem remanejadas em suas respectivas classes futuramente
 
 public class Adicionais {
 	
-/* ---------- MÉTODOS ------------ */
+/* ---------- MÃ‰TODOS ------------ */
 	
-	// Interpreta uma linha de código recebida e - no lugar dos printlns - aplicará ou invocará classes/métodos que executem as devidas funções
+	// Interpreta uma linha de cÃ³digo recebida e - no lugar dos printlns - aplicarÃ¡ ou invocarÃ¡ classes/mÃ©todos que executem as devidas funÃ§Ãµes
 	
 	public static void interpretaCodigo(String linhaDeCodigo){
 		char[] linhaFatorada = linhaDeCodigo.toCharArray();

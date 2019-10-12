@@ -88,7 +88,6 @@ public class Gerenciador {
 			return entrada;
 		} catch (Exception e) {
 			throw e;
-			// TODO: handle exception
 		}
 
 	}

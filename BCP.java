@@ -1,11 +1,11 @@
-// Classe que representa o BCP de um processo
-import java.io.*;
+import java.util.regex.*;
 
-public class BCP {
+// Classe que representa o BCP de um processo
+public class BCP implements Comparable<BCP> {
 	
 /* ------------ ATRIBUTOS ------------- */
 	
-	private int PC = 1;					// Representa a instruÃ§Ã£o (linha) que estÃ¡ sendo executada - default = 1, pois a primeira linha do processo Ã© o 
+	private int PC = 1;					// Representa a instrução (linha) que está sendo executada - default = 1, pois a primeira linha do processo é o 
 										//                                                                                         nome do programa
 	private char statusProcesso = 'P';	// Recebe 'E', 'P' ou 'B' - Executando, Pronto ou Bloqueado, respectivamente
 	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alteraes ao longo das execues
@@ -13,15 +13,17 @@ public class BCP {
 	private int Y = 0;					// 2 registrador de uso geral - inicializado com zero (0)
 	private String[] referenciaMemoria;	// Referncia para a regio de memria em que est o cdigo do programa executado
 	private String nomePrograma;		// Nome do programa a que cada instncia de BCP estar atrelada
-	private int creditos = 0;			// Quantidade de creditos que o processo dispoe para que seja corretamente ordenado na lista de prontos
+	private int creditos;				// Quantidade de creditos que o processo dispoe para que seja corretamente ordenado na lista de prontos
 	
 /* ---------------- CONSTRUTORES ----------------- */
 	
 	// PC, Status do Processo, X e Y so inicializados de modo padro. Prioridade  recebida aps extrao via arquivo, bem como o Nome do Programa.
-	//     ReferÃªncia de MemÃ³ria  apenas um endereÃ§o de memÃ³ria do prÃ³prio Java, tendo sua declarao na construo do BCP
+	//  Referência de Memória  sendo o ponteiro para o buffer com o código do programa
+	//	Créditos é inicializado com o mesmo valor de prioridade recebido
 	
 	public BCP(int prioridade, String[] buffer, String nomePrograma) {
 		this.prioridade = prioridade;
+		this.creditos = prioridade;
 		this.referenciaMemoria = buffer;
 		this.nomePrograma = nomePrograma;
 	}
@@ -50,8 +52,8 @@ public class BCP {
 		return this.Y;
 	}
 	
-	public String[] getReferenciaMemoria() {
-		return this.referenciaMemoria;
+	public String getInstrucao(int linha) {
+		return this.referenciaMemoria[linha];
 	}
 	
 	public String getNomePrograma() {
@@ -70,10 +72,6 @@ public class BCP {
 		this.statusProcesso = statusProcesso;
 	}
 	
-	public void setPrioridade(int prioridade) {
-		this.prioridade = prioridade;
-	}
-	
 	public void setX(int X) {
 		this.X = X;
 	}
@@ -89,18 +87,18 @@ public class BCP {
 	// Estabelece os critrios de comparao segundo a precedncia estabelecida (primeiramente verifica os crditos), depois,
 	// somente em caso de crditos iguais, desempata por ordem alfabtica
 	public int compareTo(BCP bcp) throws NullPointerException, ClassCastException{
-		if (this.creditos < bcp.creditos)
+		if (this.creditos < bcp.getCreditos())
 			return -1;
-		if (this.creditos > bcp.creditos)
+		if (this.creditos > bcp.getCreditos())
 			return 1;
-		char[] comp1 = this.nomePrograma.toCharArray();
-		char[] comp2 = bcp.nomePrograma.toCharArray();
-		if (comp1[0] < comp2[0])
+		
+		Pattern padrao = Pattern.compile("TESTE-");
+		String[] comp1 = padrao.split(this.nomePrograma);
+		String[] comp2 = padrao.split(bcp.getNomePrograma());
+		
+		if (Integer.parseInt(comp1[1]) < Integer.parseInt(comp2[1]))
 			return -1;
-		if (comp1[0] > comp2[0])
-			return 1;
-		if (comp1[1] < comp2[1])
-			return -1;
-		return 1;
+		else
+			return 1;		
 	}
 }

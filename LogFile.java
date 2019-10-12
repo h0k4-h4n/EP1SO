@@ -57,7 +57,15 @@ public class LogFile{
 	// como parâmetros o nome do processo e quantidade de instruções que foi capaz de executar até aquele momento
 	public void msgInterrompeProcesso(String nomeProcesso, int qtdInstrucoes){
 		if (this.iterador < 1000){
-			this.bufferResposta[this.iterador] = "Interrompendo " + nomeProcesso + " após " + qtdInstrucoes + " instruções";
+			String temp;
+			String temp1 = "Interrompendo " + nomeProcesso + " após " + qtdInstrucoes;
+			
+			if (qtdInstrucoes == 1)
+				temp = temp1 + " instrução";
+			else
+				temp = temp1 + " instruções";
+
+			this.bufferResposta[this.iterador] = temp;
 			this.iterador++;
 		}
 		else

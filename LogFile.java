@@ -76,12 +76,10 @@ public class LogFile{
 	// do interrompimento provocado justamente por essa instrução (que possivelmente ocorre antes do término do quantum
 	// do processo. Recebe como parâmetros o nome do processo e a quantidade de instruções que foi capaz de executar até
 	// aquele momento
-	public void msgESProcesso(String nomeProcesso, int qtdInstrucoes){
-		if (this.iterador < 999){
+	public void msgESProcesso(String nomeProcesso){
+		if (this.iterador < 1000){
 			this.bufferResposta[this.iterador] = "E/S iniciada em " + nomeProcesso;
 			this.iterador++;
-			
-			msgInterrompeProcesso(nomeProcesso, qtdInstrucoes);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");

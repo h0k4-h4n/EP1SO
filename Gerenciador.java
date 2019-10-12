@@ -228,5 +228,17 @@ public class Gerenciador {
 		for (int i = 0; i < 10; i++) {
 			arqProg[i].close();
 		}
+		
+		// Confecção do log de carregamento dos processos - cria um iterador, um buffer com os nomes dos processos e 
+		// chama o método do logFile
+		Iterator<BCP> it = listaProntos.descendingIterator();
+		String[] nomesProcessos = new String[10];
+		
+		for (String nomeProcesso : nomesProcessos){
+			nomeProcesso = it.next().getNomePrograma();
+		}
+		
+		logFile.msgCarregaProcessos(nomesProcessos);
+		
 	}
 }

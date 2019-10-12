@@ -8,13 +8,13 @@ public class BCP implements Comparable<BCP> {
 	private int PC = 1;					// Representa a instrução (linha) que está sendo executada - default = 1, pois a primeira linha do processo é o 
 										//                                                                                         nome do programa
 	private char statusProcesso = 'P';	// Recebe 'E', 'P' ou 'B' - Executando, Pronto ou Bloqueado, respectivamente
-	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alteraes ao longo das execuções
+	private int prioridade;				// Inteiro, iniciado com o valor originado pelo arquivo .txt e que sofrer alterações ao longo das execuções
 	private int X = 0;					// 1º registrador de uso geral - inicializado com zero (0)
 	private int Y = 0;					// 2º registrador de uso geral - inicializado com zero (0)
-	private String[] referenciaMemoria;	// Referência para a regio de memria em que está o código do programa executado
-	private String nomePrograma;		// Nome do programa a que cada instncia de BCP estar atrelada
+	private String[] referenciaMemoria;	// Referência para a região de memória em que está o código do programa executado
+	private String nomePrograma;		// Nome do programa a que cada instância de BCP estar atrelada
 	private int creditos;				// Quantidade de créditos que o processo dispõe para que seja corretamente ordenado na lista de prontos
-	private int temporizador;			// Conta o tempo de execução para suspensão de programas
+	private int temporizador = 0;		// Conta o tempo de execução para suspensão de programas
 	
 /* ---------------- CONSTRUTORES ----------------- */
 	
@@ -31,7 +31,7 @@ public class BCP implements Comparable<BCP> {
 	
 /* --------------- MTODOS ------------------- */
 	
-	// Getters de todos os atributos e Setteres somente de PC, X, Y, Status do Processo e Prioridade 
+	// Getters de todos os atributos e Setters somente de PC, X, Y, Status do Processo e Prioridade 
 	
 	public int getPC() {
 		return this.PC;
@@ -64,6 +64,10 @@ public class BCP implements Comparable<BCP> {
 	public int getCreditos(){
 		return this.creditos;
 	}
+
+	public int getTemporizador(int temp) {
+		return this.temporizador;
+	}
 	
 	public void setPC(int PC) {
 		this.PC = PC;
@@ -83,6 +87,10 @@ public class BCP implements Comparable<BCP> {
 	
 	public void setCreditos(int creditos){
 		this.creditos = creditos;
+	}
+
+	public void setTemporizador(int temp) {
+		this.temporizador = temp;
 	}
 	
 	// Estabelece os critérios de comparação segundo a precedência estabelecida (primeiramente verifica os créditos), depois,

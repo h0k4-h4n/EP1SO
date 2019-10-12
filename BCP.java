@@ -14,6 +14,7 @@ public class BCP implements Comparable<BCP> {
 	private String[] referenciaMemoria;	// Referência para a região de memória em que está o código do programa executado
 	private String nomePrograma;		// Nome do programa a que cada instância de BCP estar atrelada
 	private int creditos;				// Quantidade de créditos que o processo dispõe para que seja corretamente ordenado na lista de prontos
+	private int quantum = 1;			// Quantidade de quanta que o processo tem disponível para executar
 	private int temporizador = 0;		// Conta o tempo de execução para suspensão de programas
 	
 /* ---------------- CONSTRUTORES ----------------- */
@@ -64,6 +65,10 @@ public class BCP implements Comparable<BCP> {
 	public int getCreditos(){
 		return this.creditos;
 	}
+	
+	public int getQuantum(){
+		return this.quantum;
+	}
 
 	public int getTemporizador(int temp) {
 		return this.temporizador;
@@ -87,6 +92,10 @@ public class BCP implements Comparable<BCP> {
 	
 	public void setCreditos(int creditos){
 		this.creditos = creditos;
+	}
+	
+	public void setQuantum(int quantum){
+		this.quantum = quantum;
 	}
 
 	public void setTemporizador(int temp) {

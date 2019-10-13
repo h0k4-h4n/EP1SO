@@ -400,6 +400,7 @@ public class Escalonador {
 		}
 		double mediaTrocas = contaTrocas/10;
 		double mediaInstrucoes = acumuladorInstrucoes/contaTrocas;
+		logFile.msgEstaticas(mediaTrocas, mediaTrocas, N_COM);
 
 	}
 }

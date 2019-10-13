@@ -307,6 +307,7 @@ public class Escalonador {
 			if(aux.getTemporizador()==0){
 				listaBloqueados.remove(aux);
 				listaProntos.add(aux);
+				aux.setStatusProcesso('P');
 			}
 		}
 	}
@@ -348,6 +349,8 @@ public class Escalonador {
 		carregaProcessos();
 		BCP bcp;
 		int contaInstrucoes;
+		int contaTrocas = 0;
+		int acumuladorInstrucoes = 0;
 
 		// O escalonador executará os processos até que todos tenham terminado. Para tal
 		// o contador de instruções
@@ -370,6 +373,7 @@ public class Escalonador {
 				while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E')
 						&& finalizado == false) {
 					contaInstrucoes++;
+					acumuladorInstrucoes++;
 					finalizado = interpretaCodigo(bcp, contaInstrucoes);
 					bcp.setPC(bcp.getPC() + 1);
 				}
@@ -387,11 +391,15 @@ public class Escalonador {
 					if(creditoNulo()){
 						restituiCreditos();
 					}
+					contaTrocas++;
 				}
 			}
 			else {
 				decrementaTempBloqueados();
 			}
 		}
+		double mediaTrocas = contaTrocas/10;
+		double mediaInstrucoes = acumuladorInstrucoes/contaTrocas;
+
 	}
 }

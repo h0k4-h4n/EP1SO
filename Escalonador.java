@@ -8,11 +8,11 @@ public class Escalonador {
 
 	private int N_COM; // Número de Comandos que cada processo tem direito de executar nas
 						// condições iniciais, obtido pelo arquivo quantum.txt
-	private static LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
+	private LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
 													// carregados - sem ordenação específica)
-	private static Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenação primária por
+	private Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenação primária por
 													// créditos e secundária por ordem alfabética)
-	private static LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
+	private LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
 													// ordem
 													// de chegada
 	private LogFile logFile; // Instância de LogFile
@@ -26,7 +26,7 @@ public class Escalonador {
 
 	// Constrói um buffer com o código do programa, para que haja o controle
 	// realizado pelo PC
-	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
+	public String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
 
 		try {
@@ -48,7 +48,7 @@ public class Escalonador {
 	}
 
 	// Realiza a contagem de linhas do arquivo programa
-	public static int contaLinhasPrograma(BufferedReader arquivoPrograma) {
+	public int contaLinhasPrograma(BufferedReader arquivoPrograma) {
 		int contador = 0;
 
 		try {
@@ -68,7 +68,7 @@ public class Escalonador {
 		return contador;
 	}
 
-	public static BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
+	public BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
 		int auxNomeTxt = 0;
 		String aux = "";
 		try {
@@ -90,7 +90,7 @@ public class Escalonador {
 
 	// Rotina de inicialização do escalonador - leitura dos arquivos e carregamento
 	// dos processos
-	public static void carregaProcessos() {
+	public void carregaProcessos() {
 		// Declaração das instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[10];
 
@@ -244,11 +244,18 @@ public class Escalonador {
 	}
 
 	// Interpreta uma linha de código recebida e executa as instruções nela contidas
-	public static boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
+	public boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
 		if (linhaFatorada[0] == 'E'){
-			logFile.msgESProcesso(bcp.getNomePrograma(), qtdInstrucoes);
+			logFile.msgESProcesso(bcp.getNomePrograma());
+			bcp.setStatusProcesso('B');
+			if(listaProntos.remove(bcp)==false){
+				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
+			}
+			listaBloqueados.addLast(bcp);
+			bcp.setTemporizador(2);
+		}
 		
 		else if (linhaFatorada[0] == 'X'){
 			if (linhaFatorada.length > 3){
@@ -262,6 +269,7 @@ public class Escalonador {
 			else
 				bcp.setX((int)linhaFatorada[2]);
 		}
+	
 		
 		else if (linhaFatorada[0] == 'Y'){
 			if (linhaFatorada.length > 3){
@@ -289,6 +297,49 @@ public class Escalonador {
 		return false;
 	}
 
+	public void decrementaTempBloqueados() {
+		Iterator<BCP> iterador = listaBloqueados.iterator();
+		BCP aux;
+
+		while(iterador.hasNext()) {
+			aux = iterador.next();
+			aux.setTemporizador(aux.getTemporizador()-1);
+			if(aux.getTemporizador()==0){
+				listaBloqueados.remove(aux);
+				listaProntos.add(aux);
+				aux.setStatusProcesso('P');
+			}
+		}
+	}
+
+	public boolean creditoNulo() {
+		Iterator<BCP> iterador = listaProntos.iterator();
+		BCP aux;
+		int contador = 0;
+
+		while(iterador.hasNext()) {
+			aux = iterador.next();
+			if(aux.getCreditos()!=0) {
+				contador++;
+			}			
+		}
+		if(contador>0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void restituiCreditos() {
+		Iterator<BCP> iterador = listaProntos.iterator();
+		BCP aux;
+
+		while(iterador.hasNext()) {
+			aux = iterador.next();
+			aux.setCreditos(aux.getPrioridade());
+			aux.setQuantum(1);
+		}
+	}
 	/* --------------- MAIN --------------- */
 
 	public static void main(String[] args) {
@@ -298,6 +349,8 @@ public class Escalonador {
 		carregaProcessos();
 		BCP bcp;
 		int contaInstrucoes;
+		int contaTrocas = 0;
+		int acumuladorInstrucoes = 0;
 
 		// O escalonador executará os processos até que todos tenham terminado. Para tal
 		// o contador de instruções
@@ -308,28 +361,46 @@ public class Escalonador {
 		while (tabelaProcessos.size() > 0) {
 			contaInstrucoes = 0;
 			boolean finalizado = false;
-			bcp = listaProntos.last();
-			bcp.setStatusProcesso('E');
-			logFile.msgExecutaProcesso(bcp.getNomePrograma());
-
-			// Executa instruções enquanto estiver com status E - Executando ou enquanto a
-			// contagem de instruções não superar
-			// o número de comandos por quantum multiplicado pela quantidade de quantum que
-			// o processo detém
-			while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E') && finalizado == false) {
-				contaInstrucoes++;
-				finalizou = interpretaCodigo(bcp, contaInstrucoes);
-				bcp.setPC(bcp.getPC() + 1);
+			if(listaProntos.isEmpty()==false) {
+				bcp = listaProntos.last();
+				bcp.setStatusProcesso('E');
+				logFile.msgExecutaProcesso(bcp.getNomePrograma());
+	
+				// Executa instruções enquanto estiver com status E - Executando ou enquanto a
+				// contagem de instruções não superar
+				// o número de comandos por quantum multiplicado pela quantidade de quantum que
+				// o processo detém
+				while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E')
+						&& finalizado == false) {
+					contaInstrucoes++;
+					acumuladorInstrucoes++;
+					finalizado = interpretaCodigo(bcp, contaInstrucoes);
+					bcp.setPC(bcp.getPC() + 1);
+				}
+	
+				if (finalizado == false) {
+					logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);
+					bcp.setQuantum(bcp.getQuantum()+1);
+					bcp.setCreditos(bcp.getCreditos() - 2);
+					if (bcp.getCreditos() < 0) {
+						bcp.setCreditos(0);
+					}
+					if(listaBloqueados.size()>0) {
+						decrementaTempBloqueados();
+					}
+					if(creditoNulo()){
+						restituiCreditos();
+					}
+					contaTrocas++;
+				}
 			}
-
-			logFile.msgInterrompeProcesso(bcp.getNomePrograma(), contaInstrucoes);
-			// TODO:
-			bcp.setQuantum(bcp.getQuantum()++);
-			bcp.setCreditos(bcp.getCreditos() - 2);
-			if (bcp.getCreditos() < 0) {
-				bcp.setCreditos(0);
+			else {
+				decrementaTempBloqueados();
 			}
 		}
-	}
+		double mediaTrocas = contaTrocas/10;
+		double mediaInstrucoes = acumuladorInstrucoes/contaTrocas;
+		logFile.msgEstaticas(mediaTrocas, mediaTrocas, N_COM);
 
+	}
 }

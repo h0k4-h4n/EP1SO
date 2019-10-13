@@ -98,7 +98,7 @@ public class LogFile{
 	
 	// Inclui no buffer de resposta as mensagens de estatísticas, e chama o finalizador para gerar o .txt com o log pronto.
 	// Recebe como parâmetros a média de trocas de processos, a média de instruções e o quantum utilizado como referência
-	public void msgEstatisticas(float mediaTrocas, float mediaInstrucoes, int quantum){
+	public void msgEstatisticas(double mediaTrocas, double mediaInstrucoes, int quantum){
 		if (this.iterador < 998){
 			this.bufferResposta[this.iterador] = "MEDIA DE TROCAS: " + mediaTrocas;
 			iterador++;

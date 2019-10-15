@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Escalonador",
+            "request": "launch",
+            "mainClass": "Escalonador",
+            "projectName": "EP1SO_6ec7b7e4"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ListaExemplo",
+            "request": "launch",
+            "mainClass": "ListaExemplo",
+            "projectName": "EP1SO_6ec7b7e4"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"

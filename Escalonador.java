@@ -6,16 +6,16 @@ public class Escalonador {
 
 	/* ------------- ATRIBUTOS ------------- */
 
-	private int N_COM; // Número de Comandos que cada processo tem direito de executar nas
+	private static int N_COM; // Número de Comandos que cada processo tem direito de executar nas
 						// condições iniciais, obtido pelo arquivo quantum.txt
-	private LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
+	private static LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
 													// carregados - sem ordenação específica)
-	private Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenação primária por
+	private static Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenação primária por
 													// créditos e secundária por ordem alfabética)
-	private LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
+	private static LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
 													// ordem
 													// de chegada
-	private LogFile logFile; // Instância de LogFile
+	private static LogFile logFile; // Instância de LogFile
 
 	/* ------------ CONSTRUTORES -------------- */
 
@@ -26,7 +26,7 @@ public class Escalonador {
 
 	// Constrói um buffer com o código do programa, para que haja o controle
 	// realizado pelo PC
-	public String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
+	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
 
 		try {
@@ -48,7 +48,7 @@ public class Escalonador {
 	}
 
 	// Realiza a contagem de linhas do arquivo programa
-	public int contaLinhasPrograma(BufferedReader arquivoPrograma) {
+	public static int contaLinhasPrograma(BufferedReader arquivoPrograma) {
 		int contador = 0;
 
 		try {
@@ -68,7 +68,7 @@ public class Escalonador {
 		return contador;
 	}
 
-	public BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
+	public static BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
 		int auxNomeTxt = 0;
 		String aux = "";
 		try {
@@ -90,7 +90,7 @@ public class Escalonador {
 
 	// Rotina de inicialização do escalonador - leitura dos arquivos e carregamento
 	// dos processos
-	public void carregaProcessos() {
+	public static void carregaProcessos() {
 		// Declaração das instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[10];
 
@@ -244,7 +244,7 @@ public class Escalonador {
 	}
 
 	// Interpreta uma linha de código recebida e executa as instruções nela contidas
-	public boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
+	public static boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
 		if (linhaFatorada[0] == 'E'){
@@ -297,7 +297,7 @@ public class Escalonador {
 		return false;
 	}
 
-	public void decrementaTempBloqueados() {
+	public static void decrementaTempBloqueados() {
 		Iterator<BCP> iterador = listaBloqueados.iterator();
 		BCP aux;
 
@@ -312,7 +312,7 @@ public class Escalonador {
 		}
 	}
 
-	public boolean creditoNulo() {
+	public static boolean creditoNulo() {
 		Iterator<BCP> iterador = listaProntos.iterator();
 		BCP aux;
 		int contador = 0;
@@ -330,7 +330,7 @@ public class Escalonador {
 		}
 	}
 
-	public void restituiCreditos() {
+	public static void restituiCreditos() {
 		Iterator<BCP> iterador = listaProntos.iterator();
 		BCP aux;
 

@@ -134,7 +134,7 @@ public class LogFile{
 	}
 	
 	// Método público para retornar a instância única do objeto de LogFile. Recebe como parâmetro o quantum utilizado (N_COM)
-	public static LogFile getInstance(int N_COM) throws IOException{
+	public LogFile getInstance(int N_COM, LogFile logFile) throws IOException{
 		if (this.logFile == null)
 			this.logFile = new LogFile(N_COM);
 		return this.logFile;	

@@ -251,7 +251,7 @@ public class Escalonador {
 			logFile.msgESProcesso(bcp.getNomePrograma());
 			bcp.setStatusProcesso('B');
 			if(listaProntos.remove(bcp)==false){
-				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
+				System.err.println("BCP não encontrado na lista de prontos para que seja removido");
 			}
 			listaBloqueados.addLast(bcp);
 			bcp.setTemporizador(2);
@@ -361,6 +361,18 @@ public class Escalonador {
 		}
 	}
 	
+	public static Collection<BCP> reordena(){
+		Collection<BCP> listaReordenada = new TreeSet<BCP>();
+		Iterator<BCP> iterador = listaProntos.iterator();
+		
+		while (iterador.hasNext())
+			listaReordenada.add(iterador.next());
+
+		listaProntos.clear();
+		
+		return listaReordenada;
+	}
+	
 	/* --------------- MAIN --------------- */
 
 	public static void main(String[] args) {
@@ -377,6 +389,7 @@ public class Escalonador {
 		int contaInstrucoes;
 		int contaTrocas = 0;
 		int acumuladorInstrucoes = 0;
+		int acumuladorQuantum = 0;		// Soma o quantum (N_COM * quantum) a cada troca de processos
 
 		// O escalonador executará os processos até que todos tenham terminado. Para tal
 		// o contador de instruções
@@ -391,6 +404,7 @@ public class Escalonador {
 				bcp = ((TreeSet<BCP>) listaProntos).last();
 				bcp.setStatusProcesso('E');
 				logFile.msgExecutaProcesso(bcp.getNomePrograma());
+				acumuladorQuantum += (N_COM * bcp.getQuantum());
 	
 				// Executa instruções enquanto estiver com status E - Executando ou enquanto a
 				// contagem de instruções não superar
@@ -418,6 +432,7 @@ public class Escalonador {
 						restituiCreditos();
 					}
 					contaTrocas++;
+					listaProntos = reordena();
 				}
 			}
 			else {
@@ -428,8 +443,8 @@ public class Escalonador {
 			System.out.println(bcp);
 		}
 		double mediaTrocas = contaTrocas/10;
-		double mediaInstrucoes = acumuladorInstrucoes/contaTrocas;
-		logFile.msgEstatisticas(mediaTrocas, mediaTrocas, N_COM);
+		double mediaInstrucoes = acumuladorInstrucoes/acumuladorQuantum;
+		logFile.msgEstatisticas(mediaTrocas, mediaInstrucoes, N_COM);
 
 	}
 }

@@ -116,7 +116,9 @@ public class BCP implements Comparable<BCP> {
 		
 		if (Integer.parseInt(comp1[1]) < Integer.parseInt(comp2[1]))
 			return 1;
-		else
-			return -1;		
+		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1]))
+			return -1;	
+		else 
+			return 0;
 	}
 }

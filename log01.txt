@@ -1,0 +1,121 @@
+Carregando TESTE-2
+Carregando TESTE-1
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+E/S iniciada em TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+E/S iniciada em TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+E/S iniciada em TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+Interrompendo TESTE-2 após 2 instruções
+Executando TESTE-2
+Interrompendo TESTE-2 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-2
+TESTE-2 terminado. X=5. Y=1
+Executando TESTE-1
+Interrompendo TESTE-1 após 2 instruções
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+E/S iniciada em TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 2 instruções
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+Interrompendo TESTE-1 após 1 instrução
+Executando TESTE-1
+TESTE-1 terminado. X=1. Y=2
+MEDIA DE TROCAS: 26.0
+MEDIA DE INSTRUCOES: 0.9565217391304348
+QUANTUM: 1

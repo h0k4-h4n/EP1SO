@@ -1,20 +1,20 @@
 import java.io.*;
 
-/* Classe que estabelece as características e comportamentos do Logfile */
+/* Classe que estabelece as caracteristicas e comportamentos do Logfile */
 
 public class LogFile{
 	
 /* -------- ATRIBUTOS -------- */
 	
-	private static LogFile logFile = null;		// Instância dessa classe, inicializada com null
-	private BufferedWriter arqLogFile;			// Ponteiro para o arquivo de saída 
+	private static LogFile logFile = null;		// Instancia dessa classe, inicializada com null
+	private BufferedWriter arqLogFile;			// Ponteiro para o arquivo de saida 
 	private String[] bufferResposta;			// Buffer de Resposta
-	private int iterador;						// Controlador global do índice do buffer de resposta
+	private int iterador;						// Controlador global do indice do buffer de resposta
 
-/* -------- CONSTRUTORES -------- */
+/* -------- CONSTRUTOReS -------- */
 	
-	// Recebe como parâmetro o quantum (N_COM) para que esse seja parte do nome do arquivo gerado. Constrói a stream do
-	// arquivo de saída (LogFile), declara um buffer de resposta com 1000 linhas e inicia o iterador global
+	// Recebe como parametro o quantum (N_COM) para que esse seja parte do nome do arquivo gerado. Constroi a stream do
+	// arquivo de saida (LogFile), declara um buffer de resposta com 1000 linhas e inicia o iterador global
 	private LogFile(int N_COM) throws IOException{
 		String nomeDoArquivo = "log";
 		
@@ -31,96 +31,88 @@ public class LogFile{
 		this.iterador = 0;
 	}
 
-/* -------- MÉTODOS -------- */
+/* -------- METODOS -------- */
 
-	// Inclui no buffer de resposta as mensagens de carregamento dos processos, recebendo como parâmetro uma lista 
-	// contendo os nomes dos processos já ordenados pelo escalonador
+	// Inclui no buffer de resposta as mensagens de carregamento dos processos, recebendo como parametro uma lista 
+	// contendo os nomes dos processos ja ordenados pelo escalonador
 	public void msgCarregaProcessos(String[] listaProcessos){
 		for (String processo : listaProcessos){
 			this.bufferResposta[this.iterador] = "Carregando " + processo;
 			this.iterador++;
-			System.out.println("Carregando " + processo);
 		}
 	}
 	
-	// Inclui no buffer de resposta uma mensagem de processo deixando o status 'P' para 'E' (pronto -> executando), recebendo
-	// como parâmetro o nome do processo em questão
+	// Inclui no buffer de resposta uma mensagem de processo deixando o status 'P' para 'e' (pronto -> executando), recebendo
+	// como parametro o nome do processo em questao
 	public void msgExecutaProcesso(String nomeProcesso){
 		if (this.iterador < 1000){
 			this.bufferResposta[this.iterador] = "Executando " + nomeProcesso;
 			this.iterador++;
-			System.out.println("Executando " + nomeProcesso);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");
 	}
 	
-	// Inclui no buffer de resposta uma mensagem de processo sendo interrompido após o término do seu quantum, recebendo
-	// como parâmetros o nome do processo e quantidade de instruções que foi capaz de executar até aquele momento
+	// Inclui no buffer de resposta uma mensagem de processo sendo interrompido apos o termino do seu quantum, recebendo
+	// como parametros o nome do processo e quantidade de instrucoes que foi capaz de executar ate aquele momento
 	public void msgInterrompeProcesso(String nomeProcesso, int qtdInstrucoes){
 		if (this.iterador < 1000){
 			String temp;
-			String temp1 = "Interrompendo " + nomeProcesso + " após " + qtdInstrucoes;
+			String temp1 = "Interrompendo " + nomeProcesso + " apÃ³s " + qtdInstrucoes;
 			
 			if (qtdInstrucoes == 1)
-				temp = temp1 + " instrução";
+				temp = temp1 + " instruÃ§Ã£o";
 			else
-				temp = temp1 + " instruções";
+				temp = temp1 + " instruÃ§Ãµes";
 
 			this.bufferResposta[this.iterador] = temp;
 			this.iterador++;
-			System.out.println(temp);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");
 	}
 	
-	// Inclui no buffer de resposta duas mensagens, sendo a primeira a detecção de início de instrução E/S e a segunda
-	// do interrompimento provocado justamente por essa instrução (que possivelmente ocorre antes do término do quantum
-	// do processo. Recebe como parâmetros o nome do processo e a quantidade de instruções que foi capaz de executar até
+	// Inclui no buffer de resposta duas mensagens, sendo a primeira a deteccao de inicio de instrucao E/S e a segunda
+	// do interrompimento provocado justamente por essa instrucao (que possivelmente ocorre antes do termino do quantum
+	// do processo. Recebe como parametros o nome do processo e a quantidade de instrucoes que foi capaz de executar ate
 	// aquele momento
 	public void msgESProcesso(String nomeProcesso){
 		if (this.iterador < 1000){
 			this.bufferResposta[this.iterador] = "E/S iniciada em " + nomeProcesso;
 			this.iterador++;
-			System.out.println("E/S iniciada em " + nomeProcesso);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");
 	}
 	
-	// Inclui no buffer de resposta a mensagem de término de processamento de um dado processo, recebendo como parâmetros o
+	// Inclui no buffer de resposta a mensagem de termino de processamento de um dado processo, recebendo como parametros o
 	// nome do processo e os valores contidos nos registradores X e Y
 	public void msgFimProcesso(String nomeProcesso, int x, int y){
 		if (this.iterador < 1000){
 			this.bufferResposta[this.iterador] = nomeProcesso + " terminado. X=" + x + ". Y=" + y;
 			this.iterador++;
-			System.out.println(nomeProcesso + " terminado. X=" + x + ". Y=" + y);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");
 	}
 	
-	// Inclui no buffer de resposta as mensagens de estatísticas, e chama o finalizador para gerar o .txt com o log pronto.
-	// Recebe como parâmetros a média de trocas de processos, a média de instruções e o quantum utilizado como referência
+	// Inclui no buffer de resposta as mensagens de estatisticas, e chama o finalizador para gerar o .txt com o log pronto.
+	// Recebe como parametros a media de trocas de processos, a media de instrucoes e o quantum utilizado como referÃªncia
 	public void msgEstatisticas(double mediaTrocas, double mediaInstrucoes, int quantum){
 		if (this.iterador < 998){
 			this.bufferResposta[this.iterador] = "MEDIA DE TROCAS: " + mediaTrocas;
 			iterador++;
-			System.out.println("MEDIA DE TROCAS: " + mediaTrocas);
 			
 			this.bufferResposta[this.iterador] = "MEDIA DE INSTRUCOES: " + mediaInstrucoes;
 			iterador++;
-			System.out.println("MEDIA DE INSTRUCOES: " + mediaInstrucoes);
 			
 			this.bufferResposta[this.iterador] = "QUANTUM: " + quantum;
-			System.out.println("QUANTUM: " + quantum);
 			
 			try {
 				gravaBuffer();
 			}
 			catch(IOException e) {
-				System.err.println("Erro na gravação do LogFile");
+				System.err.println("Erro na gravacao do LogFile");
 				return;
 			}
 			
@@ -130,7 +122,7 @@ public class LogFile{
 	}
 	
 	// Grava o buffer de respostas no arquivo e fecha a Stream, determinando o fim do processo e entrega do LogFile para o
-	// o usuário
+	// o usuario
 	private void gravaBuffer() throws IOException{
 		if (this.arqLogFile != null){
 			for (String linha : this.bufferResposta){
@@ -139,16 +131,16 @@ public class LogFile{
 					this.arqLogFile.newLine();
 				}
 				else 
-					break; // Caso encontre alguma linha nula significa que desse momento em diante o buffer está vazio
+					break; // Caso encontre alguma linha nula significa que desse momento em diante o buffer esta vazio
 			}
 			arqLogFile.close();
 			System.out.println("Logfile gravado com sucesso");
 		}
 		else
-			System.err.println("Erro na gravação do LogFile");
+			System.err.println("Erro na gravacao do LogFile");
 	}
 	
-	// Método público para retornar a instância única do objeto de LogFile. Recebe como parâmetro o quantum utilizado (N_COM)
+	// Metodo publico para retornar a instancia unica do objeto de LogFile. Recebe como parametro o quantum utilizado (N_COM)
 	public static LogFile getInstance(int N_COM) throws IOException{
 		if (logFile == null)
 			logFile = new LogFile(N_COM);

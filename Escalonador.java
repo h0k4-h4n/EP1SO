@@ -6,25 +6,25 @@ public class Escalonador {
 
 	/* ------------- ATRIBUTOS ------------- */
 
-	private static int N_COM; // NÃºmero de Comandos que cada processo tem direito de executar nas
-						// condiÃ§Ãµes iniciais, obtido pelo arquivo quantum.txt
-	private static LinkedList<BCP> tabelaProcessos; // Tabela de Processos (Lista de BCPs, contendo todos os processos
-													// carregados - sem ordenaÃ§Ã£o especÃ­fica)
-	private static Collection<BCP> listaProntos; // Lista dos processos prontos (Lista de BCPs - ordenaÃ§Ã£o primÃ¡ria por
-													// crÃ©ditos e secundÃ¡ria por ordem alfabÃ©tica)
-	private static LinkedList<BCP> listaBloqueados; // Lista dos processos bloqueados (Lista de BCPs) - ordenada por
+	private static int N_COM; 								// Número de Comandos que cada processo tem direito de executar nas
+													// condições iniciais, obtido pelo arquivo quantum.txt
+	private static LinkedList<BCP> tabelaProcessos; 		// Tabela de Processos (Lista de BCPs, contendo todos os processos
+													// carregados - sem ordenação específica)
+	private static Collection<BCP> listaProntos; 			// Lista dos processos prontos (Lista de BCPs - ordenação primária por
+													// créditos e secundária por ordem alfabética)
+	private static LinkedList<BCP> listaBloqueados; 		// Lista dos processos bloqueados (Lista de BCPs) - ordenada por
 													// ordem
 													// de chegada
-	private static LogFile logFile; // InstÃ¢ncia de LogFile
+	private static LogFile logFile;						// Instância de LogFile
 
 	/* ------------ CONSTRUTORES -------------- */
 
 	public Escalonador() {
 	}
 
-	/* ---------- MÃ‰TODOS -------------- */
+	/* ---------- MÉTODOS -------------- */
 
-	// ConstrÃ³i um buffer com o cÃ³digo do programa, para que haja o controle
+	// Constrói um buffer com o código do programa, para que haja o controle
 	// realizado pelo PC
 	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
@@ -37,7 +37,7 @@ public class Escalonador {
 				linha = arquivoPrograma.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("Arquivo: " + arquivoPrograma.toString() + " nÃ£o encontrado");
+			System.out.println("Arquivo: " + arquivoPrograma.toString() + " não encontrado");
 			return null;
 		} catch (IOException e) {
 			System.out.println("Erro " + e.toString() + " na leitura do arquivo: " + arquivoPrograma.toString());
@@ -59,10 +59,10 @@ public class Escalonador {
 				linha = arquivoPrograma.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("Arquivo: " + arquivoPrograma.toString() + " nÃ£o encontrado");
+			System.err.println("Arquivo: " + arquivoPrograma.toString() + " não encontrado");
 			return -1;
 		} catch (IOException e) {
-			System.out.println("Erro " + e.toString() + " na leitura do arquivo: " + arquivoPrograma.toString());
+			System.err.println("Erro " + e.toString() + " na leitura do arquivo: " + arquivoPrograma.toString());
 			return -1;
 		}
 		return contador;
@@ -74,7 +74,7 @@ public class Escalonador {
 		try {
 			for (int i = 0; i < 10; i++) {
 				auxNomeTxt++;
-				if (Integer.toString(i).length() == 1) {
+				if (Integer.toString(auxNomeTxt).length() == 1) {
 					aux = "0" + Integer.toString(auxNomeTxt) + ".txt";
 				} else {
 					aux = Integer.toString(auxNomeTxt) + ".txt";
@@ -88,10 +88,10 @@ public class Escalonador {
 
 	}
 
-	// Rotina de inicializaÃ§Ã£o do escalonador - leitura dos arquivos e carregamento
+	// Rotina de inicialização do escalonador - leitura dos arquivos e carregamento
 	// dos processos
-	public static void carregaProcessos() {
-		// DeclaraÃ§Ã£o das instÃ¢ncias dos apontadores dos arquivos
+	public static void carregaProcessos() throws Exception {
+		// Declaração das instâncias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[10];
 
 		arqProg = geraArqProg(arqProg);
@@ -99,25 +99,25 @@ public class Escalonador {
 		BufferedReader arqPrioridade = new BufferedReader(new FileReader("prioridades.txt"));
 		BufferedReader arqQuantum = new BufferedReader(new FileReader("quantum.txt"));
 
-		// MarcaÃ§Ã£o da quantidade mÃ¡xima de caracteres permitida atÃ© o Reset
+		// Marcação da quantidade máxima de caracteres permitida até o Reset
 		for (int i = 0; i < 10; i++) {
 			arqProg[i].mark(1000);
 		}
 
-		// DeclaraÃ§Ã£o dos buffers dos cÃ³digos de cada programa
-		// DeclaraÃ§Ã£o dos buffers dos cÃ³digos de cada programa
-		String[] codProg1;
-		String[] codProg2;
-		String[] codProg3;
-		String[] codProg4;
-		String[] codProg5;
-		String[] codProg6;
-		String[] codProg7;
-		String[] codProg8;
-		String[] codProg9;
-		String[] codProg10;
+		// Declaração dos buffers dos códigos de cada programa
+		// Declaração dos buffers dos códigos de cada programa
+		String[] codProg1 = null;
+		String[] codProg2 = null;
+		String[] codProg3 = null;
+		String[] codProg4 = null;
+		String[] codProg5 = null;
+		String[] codProg6 = null;
+		String[] codProg7 = null;
+		String[] codProg8 = null;
+		String[] codProg9 = null;
+		String[] codProg10 = null;
 
-		// DeclaraÃ§Ã£o das variÃ¡veis que contabilizam a quantidade de linhas de cada
+		// Declaração das variáveis que contabilizam a quantidade de linhas de cada
 		// programa
 
 		int qtdLinhas[] = new int[10];
@@ -125,13 +125,13 @@ public class Escalonador {
 			qtdLinhas[i] = contaLinhasPrograma(arqProg[i]);
 		}
 
-		// Testa se o retorno da contagem foi vÃ¡lida, em caso positivo encaminha para a
-		// construÃ§Ã£o dos buffers dos programas
+		// Testa se o retorno da contagem foi válida, em caso positivo encaminha para a
+		// construção dos buffers dos programas
 		if (qtdLinhas[0] >= 0 && qtdLinhas[1] >= 0 && qtdLinhas[2] >= 0 && qtdLinhas[3] >= 0 && qtdLinhas[4] >= 0
 				&& qtdLinhas[5] >= 0 && qtdLinhas[6] >= 0 && qtdLinhas[7] >= 0 && qtdLinhas[8] >= 0
 				&& qtdLinhas[9] >= 0) {
 
-			// Reposiciona cada ponteiro para a marcaÃ§Ã£o inicial de cada Stream
+			// Reposiciona cada ponteiro para a marcação inicial de cada Stream
 			for (int i = 0; i < 10; i++) {
 				arqProg[i].reset();
 			}
@@ -148,18 +148,18 @@ public class Escalonador {
 			codProg9 = constroiBufferPrograma(arqProg[8], qtdLinhas[8]);
 			codProg10 = constroiBufferPrograma(arqProg[9], qtdLinhas[9]);
 
-			// Caso algum deles retorne null, nÃ£o serÃ¡ adicionado Ã s estruturas - adiante
+			// Caso algum deles retorne null, não será adicionado às estruturas - adiante
 		} else
-			System.exit(1); // Valores negativos indicam exceÃ§Ã£o tratada - arquivo comprometido - parada do
+			System.exit(1); // Valores negativos indicam exceção tratada - arquivo comprometido - parada do
 							// processamento
 
-		// ConstruÃ§Ã£o da Tabela de Processos, da Lista de Prontos e da Lista de
+		// Construção da Tabela de Processos, da Lista de Prontos e da Lista de
 		// Bloqueados
 		tabelaProcessos = new LinkedList<BCP>();
 		listaProntos = new TreeSet<BCP>();
 		listaBloqueados = new LinkedList<BCP>();
 
-		// DeclaraÃ§Ã£o dos BCPs de cada processo/programa
+		// Declaração dos BCPs de cada processo/programa
 		BCP bcp1 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg1, codProg1[0]);
 		BCP bcp2 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg2, codProg2[0]);
 		BCP bcp3 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg3, codProg3[0]);
@@ -171,11 +171,11 @@ public class Escalonador {
 		BCP bcp9 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg9, codProg9[0]);
 		BCP bcp10 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg10, codProg10[0]);
 
-		// Se possuÃ­rem cÃ³digo a ser lido, os BCPs criados sÃ£o adicionados Ã  Tabela de
-		// Processos e Ã  Lista de Prontos
-		// (HÃ¡ a precedÃªncia de que todo processo recÃ©m chegado vem com status 'P' -
-		// pronto) - como consequÃªncia, a Lista
-		// de Bloqueados Ã© inicializada somente com o nÃ³ cabeÃ§a (sem processos
+		// Se possuírem código a ser lido, os BCPs criados são adicionados à Tabela de
+		// Processos e à Lista de Prontos
+		// (Há a precedência de que todo processo recém chegado vem com status 'P' -
+		// pronto) - como consequência, a Lista
+		// de Bloqueados é inicializada somente com o nó cabeça (sem processos
 		// adicionados)
 
 		if (codProg1 != null) {
@@ -219,8 +219,8 @@ public class Escalonador {
 			listaProntos.add(bcp10);
 		}
 
-		// Leitura do arquivo quantum.txt e declaraÃ§Ã£o do LogFile
-		N_COM = arqQuantum.readLine();
+		// Leitura do arquivo quantum.txt e declaração do LogFile
+		N_COM = Integer.parseInt(arqQuantum.readLine());
 		logFile = LogFile.getInstance(N_COM);
 
 		// Fechamento das Streams dos arquivos
@@ -230,20 +230,20 @@ public class Escalonador {
 		arqPrioridade.close();
 		arqQuantum.close();
 
-		// ConfecÃ§Ã£o do log de carregamento dos processos - cria um iterador, um buffer
+		// Confecção do log de carregamento dos processos - cria um iterador, um buffer
 		// com os nomes dos processos e
-		// chama o mÃ©todo do logFile
-		Iterator<BCP> it = listaProntos.descendingIterator();
+		// chama o método do logFile
+		Iterator<BCP> it = ((TreeSet<BCP>) listaProntos).descendingIterator();
 		String[] nomesProcessos = new String[10];
 
-		for (String nomeProcesso : nomesProcessos) {
-			nomeProcesso = it.next().getNomePrograma();
+		for (int i = 0; i < nomesProcessos.length; i++) {
+			nomesProcessos[i] = it.next().getNomePrograma();
 		}
 
 		logFile.msgCarregaProcessos(nomesProcessos);
 	}
 
-	// Interpreta uma linha de cÃ³digo recebida e executa as instruÃ§Ãµes nela contidas
+	// Interpreta uma linha de código recebida e executa as instruções nela contidas
 	public static boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
@@ -251,7 +251,7 @@ public class Escalonador {
 			logFile.msgESProcesso(bcp.getNomePrograma());
 			bcp.setStatusProcesso('B');
 			if(listaProntos.remove(bcp)==false){
-				System.err.println("BCP nÃ£o encontrado na tabela ou na lista de prontos para que seja removido");
+				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
 			}
 			listaBloqueados.addLast(bcp);
 			bcp.setTemporizador(2);
@@ -288,7 +288,7 @@ public class Escalonador {
 			logFile.msgFimProcesso(bcp.getNomePrograma(), bcp.getX(), bcp.getY());
 			
 			if (tabelaProcessos.remove(bcp) == false || listaProntos.remove(bcp) == false)
-				System.err.println("BCP nÃ£o encontrado na tabela ou na lista de prontos para que seja removido");
+				System.err.println("BCP não encontrado na tabela ou na lista de prontos para que seja removido");
 			else 
 				return true;
 
@@ -340,36 +340,62 @@ public class Escalonador {
 			aux.setQuantum(1);
 		}
 	}
+	
+	public static void imprimeTabelaProcessos(){
+		Iterator<BCP> it = tabelaProcessos.iterator();
+		BCP bcp = null;
+		while(it.hasNext()){
+			bcp = it.next();
+			System.out.println(bcp);
+			System.out.println(bcp.getNomePrograma());
+		}
+	}
+	
+	public static void imprimeListaProntos(){
+		Iterator<BCP> it = listaProntos.iterator();
+		BCP bcp = null;
+		while(it.hasNext()){
+			bcp = it.next();
+			System.out.println(bcp);
+			System.out.println(bcp.getNomePrograma());
+		}
+	}
+	
 	/* --------------- MAIN --------------- */
 
 	public static void main(String[] args) {
-		// Declara um BCP genÃ©rico para realizar as chamadas, um contador de instruÃ§Ãµes
-		// para determinar quantas instruÃ§Ãµes
+		// Declara um BCP genérico para realizar as chamadas, um contador de instruções
+		// para determinar quantas instruções
 		// cada processo realizou e chama a rotina de carregamento dos processos
-		carregaProcessos();
-		BCP bcp;
+		try {
+			carregaProcessos();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BCP bcp = null;
 		int contaInstrucoes;
 		int contaTrocas = 0;
 		int acumuladorInstrucoes = 0;
 
-		// O escalonador executarÃ¡ os processos atÃ© que todos tenham terminado. Para tal
-		// o contador de instruÃ§Ãµes
-		// inicia cada quantum com zero, obtÃ©m-se o BCP do processo de maior prioridade
-		// (dada a implementaÃ§Ã£o via TreeSet,
-		// esse processo estarÃ¡ por Ãºltimo) e o status do mesmo Ã© alterado para E -
+		// O escalonador executará os processos até que todos tenham terminado. Para tal
+		// o contador de instruções
+		// inicia cada quantum com zero, obtém-se o BCP do processo de maior prioridade
+		// (dada a implementação via TreeSet,
+		// esse processo estará por último) e o status do mesmo é alterado para E -
 		// Executando
 		while (tabelaProcessos.size() > 0) {
 			contaInstrucoes = 0;
 			boolean finalizado = false;
 			if(listaProntos.isEmpty()==false) {
-				bcp = listaProntos.last();
+				bcp = ((TreeSet<BCP>) listaProntos).last();
 				bcp.setStatusProcesso('E');
 				logFile.msgExecutaProcesso(bcp.getNomePrograma());
 	
-				// Executa instruÃ§Ãµes enquanto estiver com status E - Executando ou enquanto a
-				// contagem de instruÃ§Ãµes nÃ£o superar
-				// o nÃºmero de comandos por quantum multiplicado pela quantidade de quantum que
-				// o processo detÃ©m
+				// Executa instruções enquanto estiver com status E - Executando ou enquanto a
+				// contagem de instruções não superar
+				// o número de comandos por quantum multiplicado pela quantidade de quantum que
+				// o processo detém
 				while ((contaInstrucoes < bcp.getQuantum() * N_COM) && (bcp.getStatusProcesso() == 'E')
 						&& finalizado == false) {
 					contaInstrucoes++;
@@ -397,10 +423,13 @@ public class Escalonador {
 			else {
 				decrementaTempBloqueados();
 			}
+			imprimeTabelaProcessos();
+			imprimeListaProntos();
+			System.out.println(bcp);
 		}
 		double mediaTrocas = contaTrocas/10;
 		double mediaInstrucoes = acumuladorInstrucoes/contaTrocas;
-		logFile.msgEstaticas(mediaTrocas, mediaTrocas, N_COM);
+		logFile.msgEstatisticas(mediaTrocas, mediaTrocas, N_COM);
 
 	}
 }

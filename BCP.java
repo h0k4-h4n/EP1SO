@@ -31,7 +31,7 @@ public class BCP implements Comparable<BCP> {
 	}
 	
 /* --------------- METODOS ------------------- */
-	
+
 	// Getters de todos os atributos e Setters somente de PC, X, Y, Status do Processo e Prioridade 
 	
 	public int getPC() {

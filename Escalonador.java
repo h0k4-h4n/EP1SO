@@ -317,26 +317,40 @@ public class Escalonador {
 		BCP aux;
 		int contador = 0;
 
-		while(iterador.hasNext()) {
+		while (iterador.hasNext()) {
 			aux = iterador.next();
-			if(aux.getCreditos()!=0) {
-				contador++;
-			}			
+		
+			if(aux.getCreditos() != 0) 
+				return false;
 		}
-		if(contador>0) {
-			return false;
-		} else {
-			return true;
+		
+		iterador = listaBloqueados.iterator();
+		
+		while (iterador.hasNext()){
+			aux = iterador.next();
+			
+			if (aux.getCreditos() != 0)
+				return false;
 		}
+		
+		return true;
 	}
 
 	public static void restituiCreditos() {
 		Iterator<BCP> iterador = listaProntos.iterator();
 		BCP aux;
 
-		while(iterador.hasNext()) {
+		while (iterador.hasNext()) {
 			aux = iterador.next();
 			aux.setCreditos(aux.getPrioridade());
+			aux.setQuantum(1);
+		}
+		
+		iterador = listaBloqueados.iterator();
+		
+		while (iterador.hasNext()){
+			aux = iterador.next();
+			aux.setCreditos(aux.getCreditos());
 			aux.setQuantum(1);
 		}
 	}

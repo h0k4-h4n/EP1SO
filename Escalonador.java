@@ -374,10 +374,8 @@ public class Escalonador {
 		
 		return listaReordenada;
 	}
-	
-	/* --------------- MAIN --------------- */
 
-	public static void main(String[] args) {
+	public static void executa() {
 		// Declara um BCP generico para realizar as chamadas, um contador de instrucoes
 		// para determinar quantas instrucoes
 		// cada processo realizou e chama a rotina de carregamento dos processos
@@ -448,4 +446,6 @@ public class Escalonador {
 		logFile.msgEstatisticas(mediaTrocas, mediaInstrucoes, N_COM);
 
 	}
+
+	
 }

@@ -11,7 +11,6 @@ public class Escalonador {
 	public LinkedList[] listaProntos; 				// Lista dos processos prontos (múltiplas filas)
 	public LinkedList<BCP> listaBloqueados; 		// Lista dos processos bloqueados (Lista de BCPs) - ordenada por
 														// ordem de chegada
-	public LogFile logFile;						// Instancia de LogFile
 
 /* ------------ CONSTRUTORES -------------- */
 
@@ -52,38 +51,6 @@ public class Escalonador {
 
 /* ---------- METODOS -------------- */
 	
-	public int obtemMaiorPrioridade(BufferedReader arqPrioridade){
-		int maiorPrioridade = 0;
-		int aux;
-		
-		try{
-			String linha = arqPrioridade.readLine();
-		
-			while (linha != null){
-				aux = Integer.parseInt(linha);
-				
-				if (aux > maiorPrioridade)
-					maiorPrioridade = aux;
-				
-				linha = arqPrioridade.readLine();
-			}
-		}
-		catch (FileNotFoundException e) {
-			System.err.println("Arquivo: " + arqPrioridade.toString() + " nao encontrado");
-			return -1;
-		} 
-		catch (IOException e) {
-			System.err.println("Erro " + e.toString() + " na leitura do arquivo: " + arqPrioridade.toString());
-			return -1;
-		}
-		
-		return maiorPrioridade;
-	}
-	
-	// Rotina de inicializacao do escalonador - leitura dos arquivos e carregamento
-	// dos processos
-	
-
 	public void decrementaTempBloqueados() {
 		Iterator<BCP> iterador = listaBloqueados.iterator();
 		BCP aux;
@@ -180,29 +147,6 @@ public class Escalonador {
 			somatoria += listaProntos[i].size();
 		
 		return somatoria;
-	}
-	
-	public void reordenaListaProntos(){
-		/* Iterator<BCP> it;
-		BCP[] bcps = new BCP[totalProcessosAtivos()];
-		int j = 0;
-		
-		for (int i = 0; i < listaProntos.length; i++){
-			it = listaProntos[i].iterator();
-			
-			while (it.hasNext()){
-				bcps[j] = it.next();
-				j++;
-			}
-		}
-		
-		Pattern padrao = Pattern.compile("TESTE-");
-		String[] comp1 = padrao.split(this.nomePrograma);
-		String[] comp2 = padrao.split(bcp.getNomePrograma());
-		
-		if (Integer.parseInt(comp1[1]) < Integer.parseInt(comp2[1]))
-			return 1;
-		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1])) */
 	}
 
 	public void imprimeListaProntos(){

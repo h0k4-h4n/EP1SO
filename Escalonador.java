@@ -161,6 +161,15 @@ public class Escalonador {
 				System.out.print(it.next().getNomePrograma() + ", ");
 			System.out.println();
 		}
-		System.out.println();
+	}
+	
+	public void imprimeListaBloqueados(){
+		Iterator<BCP> it = listaBloqueados.iterator();
+		
+		System.out.print("Bloqueados: ");
+			
+		while (it.hasNext())
+			System.out.print(it.next().getNomePrograma() + ", ");
+		System.out.println("\n");
 	}
 }

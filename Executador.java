@@ -362,6 +362,7 @@ public class Executador {
 				acumuladorQuantum += (N_COM * bcp.getQuantum());
 
 				escalonador.imprimeListaProntos();
+				escalonador.imprimeListaBloqueados();
 
 				// Executa instrucoes enquanto estiver com status E - Executando ou enquanto a
 				// contagem de instrucoes nao superar
@@ -398,16 +399,16 @@ public class Executador {
 						bcp.setQuantum(1);
 					}
 
-					if(escalonador.getBloqueados()!= null){
-						if (escalonador.getBloqueados().size() > 0)
-							escalonador.decrementaTempBloqueados();
-					}
-
-					if (escalonador.creditoNulo()) 
+					if (escalonador.getBloqueados().size() > 0)
+						escalonador.decrementaTempBloqueados();
+					
+				}
+	
+				if (escalonador.creditoNulo()) 
 						escalonador.restituiCreditos();
 			
-					contaTrocas++;
-				}
+				contaTrocas++;	
+				
 			} else
 				escalonador.decrementaTempBloqueados();
 		}

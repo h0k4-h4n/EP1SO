@@ -184,7 +184,6 @@ public class Executador {
 		tabelaProcessosAux = (new LinkedList<BCP>());
 		listaBloqueadosAux = (new LinkedList<BCP>());
 		listaProntosAux = (new LinkedList[maiorPrioridade + 1]);
-		System.out.println(escalonador.getProntos());
 
 		for (int i = 0; i < maiorPrioridade + 1; i++)
 			listaProntosAux[i] = new LinkedList<BCP>();
@@ -427,8 +426,10 @@ public class Executador {
 						bcp.setQuantum(1);
 					}
 
-					if (escalonador.getBloqueados().size() >= 0)
-						escalonador.decrementaTempBloqueados();
+					if(escalonador.getBloqueados()!= null){
+						if (escalonador.getBloqueados().size() > 0)
+							escalonador.decrementaTempBloqueados();
+					}
 
 					if (escalonador.creditoNulo()) {
 						escalonador.restituiCreditos();

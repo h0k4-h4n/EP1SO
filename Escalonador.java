@@ -4,43 +4,41 @@ import java.util.*;
 // Classe que simula o comportamento do escalonador
 public class Escalonador {
 
-	/* ------------- ATRIBUTOS ------------- */
+/* ------------- ATRIBUTOS ------------- */
 
-	public static int N_COM; 								// Numero de Comandos que cada processo tem direito de executar nas
-													// condicoes iniciais, obtido pelo arquivo quantum.txt
-	public static LinkedList<BCP> tabelaProcessos; 		// Tabela de Processos (Lista de BCPs, contendo todos os processos
-													// carregados - sem ordenacao especifica)
-	public static Collection<BCP> listaProntos; 			// Lista dos processos prontos (Lista de BCPs - ordenacao primaria por
-													// creditos e secundaria por ordem alfabetica)
-	public static LinkedList<BCP> listaBloqueados; 		// Lista dos processos bloqueados (Lista de BCPs) - ordenada por
-													// ordem
-													// de chegada
-	public static LogFile logFile;						// Instancia de LogFile
+	public int N_COM; 							// Numero de Comandos que cada processo tem direito a executar nas
+														// condicoes iniciais, obtido pelo arquivo quantum.txt
+	public LinkedList<BCP> tabelaProcessos; 		// Tabela de Processos (Lista de BCPs, contendo todos os processos
+														// carregados - sem ordenacao especifica)
+	public LinkedList[] listaProntos; 				// Lista dos processos prontos (múltiplas filas)
+	public LinkedList<BCP> listaBloqueados; 		// Lista dos processos bloqueados (Lista de BCPs) - ordenada por
+														// ordem de chegada
+	public LogFile logFile;						// Instancia de LogFile
 
-	/* ------------ CONSTRUTORES -------------- */
+/* ------------ CONSTRUTORES -------------- */
 
 	public Escalonador() {
 	}
 	
-	/* ------------ GETTERS -------------- */
+/* ------------ GETTERS -------------- */
 
-	public static LinkedList<BCP> getProcessos() {
+	public LinkedList<BCP> getProcessos() {
 		return tabelaProcessos;
 	}
 
-	public static Collection<BCP> getProntos() {
+	public LinkedList[] getProntos() {
 		return listaProntos;
 	}
 
-	public static LinkedList<BCP> getBloqueados() {
+	public LinkedList<BCP> getBloqueados() {
 		return listaBloqueados;
 	}
 
-	/* ---------- METODOS -------------- */
+/* ---------- METODOS -------------- */
 
 	// Constroi um buffer com o codigo do programa, para que haja o controle
 	// realizado pelo PC
-	public static String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
+	public String[] constroiBufferPrograma(BufferedReader arquivoPrograma, int contador) {
 		String[] buffer = new String[contador];
 
 		try {
@@ -62,7 +60,7 @@ public class Escalonador {
 	}
 
 	// Realiza a contagem de linhas do arquivo programa
-	public static int contaLinhasPrograma(BufferedReader arquivoPrograma) {
+	public int contaLinhasPrograma(BufferedReader arquivoPrograma) {
 		int contador = 0;
 
 		try {
@@ -82,7 +80,7 @@ public class Escalonador {
 		return contador;
 	}
 
-	public static BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
+	public BufferedReader[] geraArqProg(BufferedReader[] entrada) throws Exception {
 		int auxNomeTxt = 0;
 		String aux = "";
 		try {
@@ -101,10 +99,38 @@ public class Escalonador {
 		}
 
 	}
-
+	
+	public int obtemMaiorPrioridade(BufferedReader arqPrioridade){
+		int maiorPrioridade = 0;
+		int aux;
+		
+		try{
+			String linha = arqPrioridade.readLine();
+		
+			while (linha != null){
+				aux = Integer.parseInt(linha);
+				
+				if (aux > maiorPrioridade)
+					maiorPrioridade = aux;
+				
+				linha = arqPrioridade.readLine();
+			}
+		}
+		catch (FileNotFoundException e) {
+			System.err.println("Arquivo: " + arqPrioridade.toString() + " nao encontrado");
+			return -1;
+		} 
+		catch (IOException e) {
+			System.err.println("Erro " + e.toString() + " na leitura do arquivo: " + arqPrioridade.toString());
+			return -1;
+		}
+		
+		return maiorPrioridade;
+	}
+	
 	// Rotina de inicializacao do escalonador - leitura dos arquivos e carregamento
 	// dos processos
-	public static void carregaProcessos() throws Exception {
+	public void carregaProcessos() throws Exception {
 		// Declaracao das instancias dos apontadores dos arquivos
 		BufferedReader[] arqProg = new BufferedReader[10];
 
@@ -117,6 +143,7 @@ public class Escalonador {
 		for (int i = 0; i < 10; i++) {
 			arqProg[i].mark(1000);
 		}
+		arqPrioridade.mark(1000);
 
 		// Declaracao dos buffers dos codigos de cada programa
 		// Declaracao dos buffers dos codigos de cada programa
@@ -166,13 +193,25 @@ public class Escalonador {
 		} else
 			System.exit(1); // Valores negativos indicam excecao tratada - arquivo comprometido - parada do
 							// processamento
+							
+		int maiorPrioridade = obtemMaiorPrioridade(arqPrioridade);
+		
+		if (maiorPrioridade < 0){
+			System.err.println("Erro na obtencao da maior prioridade - inicializacao");
+			System.exit(1);
+		}
+		
+		arqPrioridade.reset();
 
 		// Construcao da Tabela de Processos, da Lista de Prontos e da Lista de
 		// Bloqueados
 		tabelaProcessos = new LinkedList<BCP>();
-		listaProntos = new TreeSet<BCP>();
 		listaBloqueados = new LinkedList<BCP>();
-
+		listaProntos = new LinkedList[maiorPrioridade + 1];
+		
+		for (int i = 0; i < listaProntos.length; i++)
+			listaProntos[i] = new LinkedList<BCP>();
+		
 		// Declaracao dos BCPs de cada processo/programa
 		BCP bcp1 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg1, codProg1[0]);
 		BCP bcp2 = new BCP(Integer.parseInt(arqPrioridade.readLine()), codProg2, codProg2[0]);
@@ -194,43 +233,43 @@ public class Escalonador {
 
 		if (codProg1 != null) {
 			tabelaProcessos.add(bcp1);
-			listaProntos.add(bcp1);
+			listaProntos[bcp1.getCreditos()].add(bcp1);
 		}
 		if (codProg2 != null) {
 			tabelaProcessos.add(bcp2);
-			listaProntos.add(bcp2);
+			listaProntos[bcp2.getCreditos()].add(bcp2);
 		}
 		if (codProg3 != null) {
 			tabelaProcessos.add(bcp3);
-			listaProntos.add(bcp3);
+			listaProntos[bcp3.getCreditos()].add(bcp3);
 		}
 		if (codProg4 != null) {
 			tabelaProcessos.add(bcp4);
-			listaProntos.add(bcp4);
+			listaProntos[bcp4.getCreditos()].add(bcp4);
 		}
 		if (codProg5 != null) {
 			tabelaProcessos.add(bcp5);
-			listaProntos.add(bcp5);
+			listaProntos[bcp5.getCreditos()].add(bcp5);
 		}
 		if (codProg6 != null) {
 			tabelaProcessos.add(bcp6);
-			listaProntos.add(bcp6);
+			listaProntos[bcp6.getCreditos()].add(bcp6);
 		}
 		if (codProg7 != null) {
 			tabelaProcessos.add(bcp7);
-			listaProntos.add(bcp7);
+			listaProntos[bcp7.getCreditos()].add(bcp7);
 		}
 		if (codProg8 != null) {
 			tabelaProcessos.add(bcp8);
-			listaProntos.add(bcp8);
+			listaProntos[bcp8.getCreditos()].add(bcp8);
 		}
 		if (codProg9 != null) {
 			tabelaProcessos.add(bcp9);
-			listaProntos.add(bcp9);
+			listaProntos[bcp9.getCreditos()].add(bcp9);
 		}
 		if (codProg10 != null) {
 			tabelaProcessos.add(bcp10);
-			listaProntos.add(bcp10);
+			listaProntos[bcp10.getCreditos()].add(bcp10);
 		}
 
 		// Leitura do arquivo quantum.txt e declaracao do LogFile
@@ -247,28 +286,37 @@ public class Escalonador {
 		// Confeccao do log de carregamento dos processos - cria um iterador, um buffer
 		// com os nomes dos processos e
 		// chama o metodo do logFile
-		Iterator<BCP> it = ((TreeSet<BCP>) listaProntos).descendingIterator();
+		Iterator<BCP> it;
 		String[] nomesProcessos = new String[10];
+		int j = 0;
 
-		for (int i = 0; i < nomesProcessos.length; i++) {
-			nomesProcessos[i] = it.next().getNomePrograma();
+		for (int i = listaProntos.length - 1; i >= 0; i--) {
+			it = listaProntos[i].iterator();
+			
+			while (it.hasNext()){
+				nomesProcessos[j] = it.next().getNomePrograma();
+				j++;
+			}
 		}
 
 		logFile.msgCarregaProcessos(nomesProcessos);
 	}
 
 	// Interpreta uma linha de codigo recebida e executa as instrucoes nela contidas
-	public static boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
+	public boolean interpretaCodigo(BCP bcp, int qtdInstrucoes){
 		char[] linhaFatorada = bcp.getInstrucao(bcp.getPC()).toCharArray();
 		
 		if (linhaFatorada[0] == 'E'){
 			logFile.msgESProcesso(bcp.getNomePrograma());
 			bcp.setStatusProcesso('B');
-			if(listaProntos.remove(bcp)==false){
-				System.err.println("BCP nao encontrado na lista de prontos para que seja removido");
-			}
+			
+			if(listaProntos[bcp.getCreditos()].remove(bcp) == false)
+				System.err.println("BCP " + bcp.getNomePrograma() + " nao encontrado na lista de prontos para que" +
+								   " seja removido");
+			
 			listaBloqueados.addLast(bcp);
-			bcp.setTemporizador(2);
+			bcp.setTemporizador(3);		// Inicia com 3 pois o decremento ocorre ao fim do ciclo, antes que outro
+										// processo assuma a CPU
 		}
 		
 		else if (linhaFatorada[0] == 'X'){
@@ -283,7 +331,6 @@ public class Escalonador {
 			else
 				bcp.setX(Character.getNumericValue(linhaFatorada[2]));
 		}
-	
 		
 		else if (linhaFatorada[0] == 'Y'){
 			if (linhaFatorada.length > 3){
@@ -301,106 +348,132 @@ public class Escalonador {
 		else if (linhaFatorada[0] == 'S'){
 			logFile.msgFimProcesso(bcp.getNomePrograma(), bcp.getX(), bcp.getY());
 			
-			if (tabelaProcessos.remove(bcp) == false || listaProntos.remove(bcp) == false)
-				System.err.println("BCP nao encontrado na tabela ou na lista de prontos para que seja removido");
+			if (tabelaProcessos.remove(bcp) == false || listaProntos[bcp.getCreditos()].remove(bcp) == false)
+				System.err.println("BCP " + bcp.getNomePrograma() + " nao encontrado na tabela ou na lista de prontos" + 
+								   " para que seja removido");
 			else 
 				return true;
-
 		}
 
 		return false;
 	}
 
-	public static void decrementaTempBloqueados() {
+	public void decrementaTempBloqueados() {
 		Iterator<BCP> iterador = listaBloqueados.iterator();
 		BCP aux;
 		
 		while(iterador.hasNext()) {
 			aux = iterador.next();
-			aux.setTemporizador(aux.getTemporizador()-1);
-			if(aux.getTemporizador()==0){
+			aux.setTemporizador(aux.getTemporizador() - 1);
+			
+			if(aux.getTemporizador() == 0){
 				iterador.remove();
-				listaProntos.add(aux);
+				listaProntos[aux.getCreditos()].addLast(aux);
 				aux.setStatusProcesso('P');
 			}
 		}
 	}
 
-	public static boolean creditoNulo() {
-		Iterator<BCP> iterador = listaProntos.iterator();
-		BCP aux;
-		int contador = 0;
-
-		while (iterador.hasNext()) {
-			aux = iterador.next();
+	public boolean creditoNulo() {
+		Iterator<BCP> it;
 		
-			if(aux.getCreditos() != 0) 
-				return false;
+		for (int i = 0; i < listaProntos.length; i++){
+			it = listaProntos[i].iterator();
+			
+			while (it.hasNext()){
+				if (it.next().getCreditos() != 0)
+					return false;
+			}
 		}
 		
-		iterador = listaBloqueados.iterator();
+		it = listaBloqueados.iterator();
 		
-		while (iterador.hasNext()){
-			aux = iterador.next();
-			
-			if (aux.getCreditos() != 0)
+		while (it.hasNext()){
+			if (it.next().getCreditos() != 0)
 				return false;
 		}
 		
 		return true;
 	}
 
-	public static void restituiCreditos() {
-		Iterator<BCP> iterador = listaProntos.iterator();
+	public void restituiCreditos() {
+		Iterator<BCP> it;
 		BCP aux;
-
-		while (iterador.hasNext()) {
-			aux = iterador.next();
+		
+		for (int i = 0; i < listaProntos.length; i++){
+			it = listaProntos[i].iterator();
+			
+			while (it.hasNext()){
+				aux = it.next();
+				aux.setCreditos(aux.getPrioridade());
+				aux.setQuantum(1);
+			}
+		}
+		
+		it = listaBloqueados.iterator();
+		
+		while (it.hasNext()){
+			aux = it.next();
 			aux.setCreditos(aux.getPrioridade());
 			aux.setQuantum(1);
 		}
-		
-		iterador = listaBloqueados.iterator();
-		
-		while (iterador.hasNext()){
-			aux = iterador.next();
-			aux.setCreditos(aux.getCreditos());
-			aux.setQuantum(1);
-		}
 	}
 	
-	/*
-	public static void imprimeTabelaProcessos(){
-		Iterator<BCP> it = tabelaProcessos.iterator();
-		BCP bcp = null;
-		while(it.hasNext()){
-			bcp = it.next();
-			System.out.println(bcp);
-			System.out.println(bcp.getNomePrograma());
+	public boolean listaProntosVazia(){
+		LinkedList<BCP> fila;
+		
+		for (int i = listaProntos.length - 1; i >= 0; i--){
+			fila = listaProntos[i];
+		
+			if (fila.size() > 0)
+				return false;
 		}
+		
+		return true;
 	}
 	
-	public static void imprimeListaProntos(){
-		Iterator<BCP> it = listaProntos.iterator();
-		BCP bcp = null;
-		while(it.hasNext()){
-			bcp = it.next();
-			System.out.println(bcp);
-			System.out.println(bcp.getNomePrograma());
+	public BCP obtemBCPMaiorCredito(){
+		LinkedList<BCP> fila;
+		
+		for (int i = listaProntos.length - 1; i >= 0; i--){
+			fila = listaProntos[i];
+			
+			if (fila.size() > 0)
+				return fila.getFirst();	
 		}
-	}
-	*/
-
-	public static Collection<BCP> reordena(){
-		Collection<BCP> listaReordenada = new TreeSet<BCP>();
-		Iterator<BCP> iterador = listaProntos.iterator();
 		
-		while (iterador.hasNext())
-			listaReordenada.add(iterador.next());
-
-		listaProntos.clear();
+		return null;
+	}	
+	
+	public int totalProcessosAtivos(){
+		int somatoria = 0;
 		
-		return listaReordenada;
+		for (int i = 0; i < listaProntos.length; i++)
+			somatoria += listaProntos[i].size();
+		
+		return somatoria;
 	}
 	
+	public void reordenaListaProntos(){
+		Iterator<BCP> it;
+		BCP[] bcps = new BCP[totalProcessosAtivos()];
+		int j = 0;
+		
+		for (int i = 0; i < listaProntos.length; i++){
+			it = listaProntos[i].iterator();
+			
+			while (it.hasNext()){
+				bcps[j] = it.next();
+				j++;
+			}
+		}
+		
+		Pattern padrao = Pattern.compile("TESTE-");
+		String[] comp1 = padrao.split(this.nomePrograma);
+		String[] comp2 = padrao.split(bcp.getNomePrograma());
+		
+		if (Integer.parseInt(comp1[1]) < Integer.parseInt(comp2[1]))
+			return 1;
+		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1]))
+	}
 }

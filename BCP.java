@@ -109,8 +109,9 @@ public class BCP implements Comparable<BCP> {
 			return -1;
 		if (this.creditos > bcp.getCreditos())
 			return 1;
+		return 0;
 		
-		Pattern padrao = Pattern.compile("TESTE-");
+		/* Pattern padrao = Pattern.compile("TESTE-");
 		String[] comp1 = padrao.split(this.nomePrograma);
 		String[] comp2 = padrao.split(bcp.getNomePrograma());
 		
@@ -119,6 +120,6 @@ public class BCP implements Comparable<BCP> {
 		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1]))
 			return -1;	
 		else 
-			return 0;
+			return 0; */
 	}
 }

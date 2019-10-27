@@ -48,6 +48,7 @@ public class LogFile{
 		if (this.iterador < 1000){
 			this.bufferResposta[this.iterador] = "Executando " + nomeProcesso;
 			this.iterador++;
+			System.out.println("Executando " + nomeProcesso);
 		}
 		else
 			System.err.println("Buffer do LogFile cheio, parar programa");

@@ -359,11 +359,12 @@ public class Executador {
 				bcp = escalonador.obtemBCPMaiorCredito();
 				bcp.setStatusProcesso('E');
 				logFile.msgExecutaProcesso(bcp.getNomePrograma());
-				acumuladorQuantum += (N_COM * bcp.getQuantum());
+				acumuladorQuantum += bcp.getQuantum();
 
-				escalonador.imprimeListaProntos();
-				escalonador.imprimeListaBloqueados();
-
+				if (acumuladorInstrucoes < 50){
+					escalonador.imprimeListaProntos();
+					escalonador.imprimeListaBloqueados();
+				}
 				// Executa instrucoes enquanto estiver com status E - Executando ou enquanto a
 				// contagem de instrucoes nao superar
 				// o numero de comandos por quantum multiplicado pela quantidade de quantum que

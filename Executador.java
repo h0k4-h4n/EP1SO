@@ -34,6 +34,8 @@ public class Executador {
 				bcp.setStatusProcesso('E');
 				escalonador.logFile.msgExecutaProcesso(bcp.getNomePrograma());
 				acumuladorQuantum += (escalonador.N_COM * bcp.getQuantum());
+				
+				escalonador.imprimeListaProntos();
 
 				// Executa instrucoes enquanto estiver com status E - Executando ou enquanto a
 				// contagem de instrucoes nao superar

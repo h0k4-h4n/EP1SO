@@ -397,25 +397,27 @@ public class Escalonador {
 	}
 
 	public void restituiCreditos() {
-		Iterator<BCP> it;
-		BCP aux;
+		Iterator<BCP> it = listaProntos[0].iterator();
+		BCP[] filaIteracao = new BCP[totalProcessosAtivos()];
+		BCP bcp;
 		
-		for (int i = 0; i < listaProntos.length; i++){
-			it = listaProntos[i].iterator();
-			
-			while (it.hasNext()){
-				aux = it.next();
-				aux.setCreditos(aux.getPrioridade());
-				aux.setQuantum(1);
-			}
+		for (int i = 0; it.hasNext(); i++)
+			filaIteracao[i] = it.next();
+		
+		for (int i = 0; i < filaIteracao.length && filaIteracao[i] != null; i++){
+			bcp = filaIteracao[i];
+			listaProntos[bcp.getCreditos()].remove(bcp);
+			bcp.setCreditos(bcp.getPrioridade());
+			bcp.setQuantum(1);
+			listaProntos[bcp.getCreditos()].add(bcp);
 		}
-		
+	
 		it = listaBloqueados.iterator();
 		
 		while (it.hasNext()){
-			aux = it.next();
-			aux.setCreditos(aux.getPrioridade());
-			aux.setQuantum(1);
+			bcp = it.next();
+			bcp.setCreditos(bcp.getPrioridade());
+			bcp.setQuantum(1);
 		}
 	}
 	
@@ -455,7 +457,7 @@ public class Escalonador {
 	}
 	
 	public void reordenaListaProntos(){
-		Iterator<BCP> it;
+		/* Iterator<BCP> it;
 		BCP[] bcps = new BCP[totalProcessosAtivos()];
 		int j = 0;
 		
@@ -474,6 +476,21 @@ public class Escalonador {
 		
 		if (Integer.parseInt(comp1[1]) < Integer.parseInt(comp2[1]))
 			return 1;
-		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1]))
+		else if (Integer.parseInt(comp1[1]) > Integer.parseInt(comp2[1])) */
+	}
+
+	public void imprimeListaProntos(){
+		Iterator<BCP> it;
+		
+		for (int i = listaProntos.length - 1; i >= 0; i--){
+			it = listaProntos[i].iterator();
+			
+			System.out.print("Fila " + i + ": ");
+			
+			while (it.hasNext())
+				System.out.print(it.next().getNomePrograma() + ", ");
+			System.out.println();
+		}
+		System.out.println();
 	}
 }

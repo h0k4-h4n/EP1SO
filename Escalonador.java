@@ -46,6 +46,10 @@ public class Escalonador {
 		this.listaBloqueados = bloqueados;
 	}
 
+	public void setProntosIndice(LinkedList<BCP> entrada, int i) {
+		this.listaProntos[i] = entrada;
+	}
+
 /* ---------- METODOS -------------- */
 	
 	public int obtemMaiorPrioridade(BufferedReader arqPrioridade){

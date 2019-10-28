@@ -354,6 +354,9 @@ public class Executador {
 		while (escalonador.getProcessos().size() > 0) {
 			contaInstrucoes = 0;
 			boolean processoConcluido = false;
+			
+			if (escalonador.getBloqueados().size() > 0)
+				escalonador.decrementaTempBloqueados();
 
 			if (escalonador.listaProntosVazia() == false) {
 				bcp = escalonador.obtemBCPMaiorCredito();
@@ -361,10 +364,6 @@ public class Executador {
 				logFile.msgExecutaProcesso(bcp.getNomePrograma());
 				acumuladorQuantum += bcp.getQuantum();
 
-				if (acumuladorInstrucoes < 50){
-					escalonador.imprimeListaProntos();
-					escalonador.imprimeListaBloqueados();
-				}
 				// Executa instrucoes enquanto estiver com status E - Executando ou enquanto a
 				// contagem de instrucoes nao superar
 				// o numero de comandos por quantum multiplicado pela quantidade de quantum que
@@ -398,11 +397,7 @@ public class Executador {
 					if (bcp.getCreditos() <= 0) {
 						bcp.setCreditos(0);
 						bcp.setQuantum(1);
-					}
-
-					if (escalonador.getBloqueados().size() > 0)
-						escalonador.decrementaTempBloqueados();
-					
+					}	
 				}
 	
 				if (escalonador.creditoNulo()) 
